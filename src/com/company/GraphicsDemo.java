@@ -28,10 +28,10 @@ public class GraphicsDemo extends JPanel implements KeyListener, ActionListener 
 
         g2D.setColor(Color.DARK_GRAY);
         ((Graphics2D) g2D).setStroke(new BasicStroke(10));
-        g2D.drawLine(450,200,1350,200);
-        g2D.drawLine(450,800,1350,800);
-        g2D.drawArc(250,200,400,600,90,180);
-        g2D.drawArc(1150,200,400,600,90,-180);
+        g2D.drawLine(450,250,1350,250);
+        g2D.drawLine(450,750,1350,750);
+        g2D.drawArc(250,250,400,500,90,180);
+        g2D.drawArc(1150,250,400,500,90,-180);
 
         g2D.setColor(Color.BLACK);
         g2D.setFont(new Font("Comic Sans",Font.PLAIN,75));
