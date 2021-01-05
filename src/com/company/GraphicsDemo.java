@@ -105,41 +105,38 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             playery += velocityY;
         }
 
-        //Move diagonally when on curve
+        //Movement
         if (flat == false && top == false && left == true) {
-            velocityX = 3;
-            velocityY = 4;
+            velocityX = 6;
+            velocityY = 8;
         } else if (flat == true && top == false) {
-            velocityX = 10;
+            velocityX = 20;
             velocityY = 0;
         } else if (flat == false && top == false && left == false) {
-            velocityX = 4;
-            velocityY = -4;
+            velocityX = 10;
+            velocityY = -10;
         } else if (flat == false && top == true && left == false) {
-            velocityX = -3;
-            velocityY = -4;
+            velocityX = -6;
+            velocityY = -7;
         } else if (flat == true && top == true) {
-            velocityX = -10;
+            velocityX = -20;
             velocityY = 0;
         } else if (flat == false && top == true && left == true) {
-            velocityX = -3;
-            velocityY = 4;
+            velocityX = -5;
+            velocityY = 8;
         }
 
         space = false;
+        //Determining where the player is on the board
         if (playerx > 350 && playerx < 1350) {
             flat = true;
-            //System.out.println("Flat is True");
         } else {
             flat = false;
-            //System.out.println("Flat is False");
         }
         if (playery < 500) {
             top = true;
-            System.out.println("Top is True");
         } else {
             top = false;
-            //System.out.println("Top is False");
         }
         if (playerx > 900) {
             left = false;
