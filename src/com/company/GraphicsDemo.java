@@ -9,9 +9,10 @@ import java.awt.event.KeyListener;
 
 public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboard Input*/, ActionListener {
 
-    Timer timer = new Timer(100,this); //Constructing a Timer
+    Timer timer = new Timer(10,this); //Constructing a Timer
     //Variables
     double seconds = 0; //Variable for Time
+    int minutes = 0; //Variable for Minutes
     int playerx = 100, playery = 500; //Variables for the player's position
     boolean space = false; //Variable to see if the space bar has been pressed
     int playersteps = 0; //Variable to count how many steps you've taken
@@ -59,15 +60,43 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
         //Creating the Clock on Screen
         g2D.setColor(Color.BLACK);
         g2D.setFont(new Font("Comic Sans",Font.PLAIN,75));
-        g2D.drawString(Math.round(seconds)+"",900,350);
+        if (minutes < 1) {
+            if (seconds < 10 ) {
+                g2D.drawString("00:0" + Math.round(seconds),800,550);
+            } else{
+                g2D.drawString("00:" + Math.round(seconds),800,550);
+            }
+        } else {
+            if (minutes < 10) {
+                if (seconds < 10) {
+                    g2D.drawString("0" + minutes + ":0" + Math.round(seconds),800,550);
+                } else {
+                    g2D.drawString("0" + minutes + ":" + Math.round(seconds),800,550);
+                }
+            } else {
+                if (seconds < 10) {
+                    g2D.drawString( minutes + ":0" + Math.round(seconds),800,550);
+                } else {
+                    g2D.drawString(minutes + ":" + Math.round(seconds),800,550);
+                }
+            }
+        }
+        g2D.setFont(new Font("Oxygen",Font.BOLD,120));
+        g2D.drawString("MAD DASH", 600,400);
+        g2D.setFont(new Font("Bahnschrift",Font.PLAIN,80));
+        g2D.drawString("Mash Spacebar", 650,700);
 
     }
 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        seconds += 0.1; //Time Counter
-        //System.out.println(seconds + " seconds have passed");
+        if (seconds >= 60) {
+            seconds -= 60;
+            minutes++;
+        }
+        seconds += 0.01; //Time Counter
+        //System.out.println(minutes + ":" + Math.round(seconds) + " seconds have passed");
 
         //Move the player when the spacebar is pressed
         if (space == true) {
@@ -80,16 +109,16 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             velocityX = 3;
             velocityY = 4;
         } else if (flat == true && top == false) {
-            velocityX = 7;
+            velocityX = 10;
             velocityY = 0;
         } else if (flat == false && top == false && left == false) {
-            velocityX = 3;
+            velocityX = 4;
             velocityY = -4;
         } else if (flat == false && top == true && left == false) {
             velocityX = -3;
             velocityY = -4;
         } else if (flat == true && top == true) {
-            velocityX = -7;
+            velocityX = -10;
             velocityY = 0;
         } else if (flat == false && top == true && left == true) {
             velocityX = -3;
@@ -123,13 +152,13 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
     //Keyboard Input
     @Override
     public void keyTyped(KeyEvent e) {
-        space = true;
-        playersteps++;
     }
     @Override
     public void keyPressed(KeyEvent e) {
     }
     @Override
     public void keyReleased(KeyEvent e) {
+        space = true;
+        playersteps++;
     }
 }
