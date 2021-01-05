@@ -81,6 +81,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                 }
             }
         }
+        //Added Title and Instructions
         g2D.setFont(new Font("Oxygen",Font.BOLD,120));
         g2D.drawString("MAD DASH", 600,400);
         g2D.setFont(new Font("Bahnschrift",Font.PLAIN,80));
