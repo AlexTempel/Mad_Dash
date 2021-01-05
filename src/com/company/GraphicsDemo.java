@@ -9,13 +9,14 @@ import java.awt.event.KeyListener;
 
 public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboard Input*/, ActionListener {
 
-    Timer timer = new Timer(1000,this); //Constructing a Timer
+    Timer timer = new Timer(100,this); //Constructing a Timer
     //Variables
-    int seconds = 0; //Variable for Time
+    double seconds = 0; //Variable for Time
     int playerx = 100, playery = 500; //Variables for the player's position
     boolean space = false; //Variable to see if the space bar has been pressed
     int playersteps = 0; //Variable to count how many steps you've taken
-    boolean flat = false, top = false; //Variables to see what part of the track you are on
+    boolean flat = false, top = false, left = true; //Variables to see what part of the track you are on
+    double velocityX = 3, velocityY = 0;
 
     public GraphicsDemo() {
         addKeyListener(this);
@@ -58,26 +59,62 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
         //Creating the Clock on Screen
         g2D.setColor(Color.BLACK);
         g2D.setFont(new Font("Comic Sans",Font.PLAIN,75));
-        g2D.drawString(seconds+"",900,350);
+        g2D.drawString(Math.round(seconds)+"",900,350);
 
     }
 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        seconds++;
-        System.out.println(seconds + " seconds have passed");
+        seconds += 0.1; //Time Counter
+        //System.out.println(seconds + " seconds have passed");
+
+        //Move the player when the spacebar is pressed
+        if (space == true) {
+            playerx += velocityX;
+            playery += velocityY;
+        }
+
+        //Move diagonally when on curve
+        if (flat == false && top == false && left == true) {
+            velocityX = 3;
+            velocityY = 4;
+        } else if (flat == true && top == false) {
+            velocityX = 7;
+            velocityY = 0;
+        } else if (flat == false && top == false && left == false) {
+            velocityX = 3;
+            velocityY = -4;
+        } else if (flat == false && top == true && left == false) {
+            velocityX = -3;
+            velocityY = -4;
+        } else if (flat == true && top == true) {
+            velocityX = -7;
+            velocityY = 0;
+        } else if (flat == false && top == true && left == true) {
+            velocityX = -3;
+            velocityY = 4;
+        }
 
         space = false;
-        if (playerx > 450 && playerx < 1350) {
+        if (playerx > 350 && playerx < 1350) {
             flat = true;
+            //System.out.println("Flat is True");
         } else {
             flat = false;
+            //System.out.println("Flat is False");
         }
-        if (playery > 500) {
+        if (playery < 500) {
             top = true;
+            System.out.println("Top is True");
         } else {
             top = false;
+            //System.out.println("Top is False");
+        }
+        if (playerx > 900) {
+            left = false;
+        } else {
+            left = true;
         }
 
         repaint();
