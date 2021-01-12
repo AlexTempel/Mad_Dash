@@ -18,6 +18,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
     int playersteps = 0; //Variable to count how many steps you've taken
     boolean flat = false, top = false, left = true; //Variables to see what part of the track you are on
     double velocityX = 0, velocityY = 0;
+    double degrees = Math.PI; //Degree that the player is at
 
     public GraphicsDemo() {
         addKeyListener(this);
@@ -89,9 +90,8 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
         g2D.setFont(new Font("Bahnschrift",Font.PLAIN,70));
         g2D.drawString("Mash Spacebar", 450,450);
 
-
-
     }
+
 
 
     @Override
@@ -103,34 +103,38 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
         seconds += 0.01; //Time Counter
         //System.out.println(minutes + ":" + Math.round(seconds) + " seconds have passed");
 
-        //Move the player when the spacebar is pressed
-        if (space == true) {
-            playerx += velocityX;
-            playery += velocityY;
-        }
+
 
         //Movement
-        if (flat == false && top == false && left == true) {
-            velocityX = 8;
-            velocityY = 8;
-        } else if (flat == true && top == false) {
-            velocityX = 20;
-            velocityY = 0;
-        } else if (flat == false && top == false && left == false) {
-            velocityX = 10;
-            velocityY = -10;
-        } else if (flat == false && top == true && left == false) {
-            velocityX = -7;
-            velocityY = -7;
-        } else if (flat == true && top == true) {
-            velocityX = -20;
-            velocityY = 0;
-        } else if (flat == false && top == true && left == true) {
-            velocityX = -8;
-            velocityY = 8;
+        if (space == true) {
+            if (flat == false && top == false && left == true) {
+                    degrees += (Math.PI / 48);
+                    velocityX = -20 * Math.sin(degrees);
+                    velocityY = -20 * Math.cos(degrees);
+                    /* System.out.println("The degrees is: " + degrees + " The player x is: " + playerx + " The player Y is: " + playery
+                            + " The velocity x is: " + velocityX + " The velocity y is: " + velocityY); */ // Debugging tool
+            } else if (flat == true && top == false) {
+                velocityX = 20;
+                velocityY = 0;
+            } else if (flat == false && top == false && left == false) {
+                degrees += (Math.PI / 48);
+                velocityX = -20 * Math.sin(degrees);
+                velocityY = -20 * Math.cos(degrees);
+            } else if (flat == false && top == true && left == false) {
+                degrees += (Math.PI / 48);
+                velocityX = -20 * Math.sin(degrees);
+                velocityY = -20 * Math.cos(degrees);
+            } else if (flat == true && top == true) {
+                velocityX = -20;
+                velocityY = 0;
+            } else if (flat == false && top == true && left == true) {
+                degrees += (Math.PI / 48);
+                velocityX = -20 * Math.sin(degrees);
+                velocityY = -20 * Math.cos(degrees);
+            }
         }
 
-        space = false;
+
         //Determining where the player is on the board
         if (top == false) {
             if (playerx > 382 && playerx < 933) {
@@ -139,7 +143,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                 flat = false;
             }
         } else {
-            if (playerx > 412 && playerx < 963) {
+            if (playerx > 412 && playerx < 933) {
                 flat = true;
             } else {
                 flat = false;
@@ -156,6 +160,14 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
         } else {
             left = true;
         }
+
+        //Move the player when the spacebar is pressed
+        if (space == true) {
+            playerx += velocityX;
+            playery += velocityY;
+        }
+
+        space = false;
 
         repaint();
     }
