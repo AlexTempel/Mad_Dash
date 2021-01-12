@@ -13,11 +13,11 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
     //Variables
     double seconds = 0; //Variable for Time
     int minutes = 0; //Variable for Minutes
-    int playerx = 100, playery = 500; //Variables for the player's position
+    int playerx = 110, playery = 350; //Variables for the player's position
     boolean space = false; //Variable to see if the space bar has been pressed
     int playersteps = 0; //Variable to count how many steps you've taken
     boolean flat = false, top = false, left = true; //Variables to see what part of the track you are on
-    double velocityX = 3, velocityY = 0;
+    double velocityX = 0, velocityY = 0;
 
     public GraphicsDemo() {
         addKeyListener(this);
@@ -36,56 +36,60 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
         //Drawing Inside of the Track
         g2D.setColor(Color.DARK_GRAY);
         ((Graphics2D) g2D).setStroke(new BasicStroke(10));
-        g2D.drawLine(450,250,1350,250);
-        g2D.drawLine(450,750,1350,750);
-        g2D.drawArc(250,250,400,500,90,180);
-        g2D.drawArc(1150,250,400,500,90,-180);
+        g2D.drawArc(200,150,425,425,90,180);
+        g2D.drawArc(750,150,425,425,90,-180);
+        g2D.drawLine(412,150,963,150);
+        g2D.drawLine(412,575,963,575);
 
         //Drawing Running Lines
         g2D.setColor(Color.WHITE);
         ((Graphics2D) g2D).setStroke(new BasicStroke(5));
-        g2D.drawLine(450,100,1350,100);
-        g2D.drawLine(450,175,1350,175);
-        g2D.drawLine(450,825,1350,825);
-        g2D.drawLine(450,900,1350,900);
-        g2D.drawArc(75,100,750,800,90,180);
-        g2D.drawArc(150,175,600,650,90,180);
-        g2D.drawArc(975,100,750,800,90,-180);
-        g2D.drawArc(1050,175,600,650,90,-180);
+        g2D.drawArc(150,100,525,525,90,180);
+        g2D.drawArc(100,50,625,625,90,180);
+        g2D.drawLine(412,100,963,100);
+        g2D.drawLine(412,50,963,50);
+        g2D.drawLine(412,625,963,625);
+        g2D.drawLine(412,675,963,675);
+        g2D.drawArc(700,100,525,525,90,-180);
+        g2D.drawArc(650,50,625,625,90,-180);
 
         //Creating the Runner
         g2D.setColor(Color.YELLOW);
         g2D.fillOval(playerx,playery,30,30);
+
 
         //Creating the Clock on Screen
         g2D.setColor(Color.BLACK);
         g2D.setFont(new Font("Comic Sans",Font.PLAIN,75));
         if (minutes < 1) {
             if (seconds < 10 ) {
-                g2D.drawString("00:0" + Math.round(seconds),800,550);
+                g2D.drawString("00:0" + Math.round(seconds),600,550);
             } else{
-                g2D.drawString("00:" + Math.round(seconds),800,550);
+                g2D.drawString("00:" + Math.round(seconds),600,550);
             }
         } else {
             if (minutes < 10) {
                 if (seconds < 10) {
-                    g2D.drawString("0" + minutes + ":0" + Math.round(seconds),800,550);
+                    g2D.drawString("0" + minutes + ":0" + Math.round(seconds),600,550);
                 } else {
-                    g2D.drawString("0" + minutes + ":" + Math.round(seconds),800,550);
+                    g2D.drawString("0" + minutes + ":" + Math.round(seconds),600,550);
                 }
             } else {
                 if (seconds < 10) {
-                    g2D.drawString( minutes + ":0" + Math.round(seconds),800,550);
+                    g2D.drawString( minutes + ":0" + Math.round(seconds),600,550);
                 } else {
-                    g2D.drawString(minutes + ":" + Math.round(seconds),800,550);
+                    g2D.drawString(minutes + ":" + Math.round(seconds),600,550);
                 }
             }
         }
+
         //Added Title and Instructions
         g2D.setFont(new Font("Oxygen",Font.BOLD,120));
-        g2D.drawString("MAD DASH", 600,400);
-        g2D.setFont(new Font("Bahnschrift",Font.PLAIN,80));
-        g2D.drawString("Mash Spacebar", 650,700);
+        g2D.drawString("MAD DASH", 350,300);
+        g2D.setFont(new Font("Bahnschrift",Font.PLAIN,70));
+        g2D.drawString("Mash Spacebar", 450,450);
+
+
 
     }
 
@@ -107,7 +111,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
 
         //Movement
         if (flat == false && top == false && left == true) {
-            velocityX = 6;
+            velocityX = 8;
             velocityY = 8;
         } else if (flat == true && top == false) {
             velocityX = 20;
@@ -116,29 +120,38 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             velocityX = 10;
             velocityY = -10;
         } else if (flat == false && top == true && left == false) {
-            velocityX = -6;
+            velocityX = -7;
             velocityY = -7;
         } else if (flat == true && top == true) {
             velocityX = -20;
             velocityY = 0;
         } else if (flat == false && top == true && left == true) {
-            velocityX = -5;
+            velocityX = -8;
             velocityY = 8;
         }
 
         space = false;
         //Determining where the player is on the board
-        if (playerx > 350 && playerx < 1350) {
-            flat = true;
+        if (top == false) {
+            if (playerx > 382 && playerx < 933) {
+                flat = true;
+            } else {
+                flat = false;
+            }
         } else {
-            flat = false;
+            if (playerx > 412 && playerx < 963) {
+                flat = true;
+            } else {
+                flat = false;
+            }
         }
-        if (playery < 500) {
+
+        if (playery < 345) {
             top = true;
         } else {
             top = false;
         }
-        if (playerx > 900) {
+        if (playerx > 700) {
             left = false;
         } else {
             left = true;
