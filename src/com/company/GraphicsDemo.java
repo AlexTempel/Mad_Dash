@@ -107,12 +107,13 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
 
         //Movement
         if (space == true) {
+            System.out.println("The degrees is: " + degrees + " The player x is: " + playerx + " The player Y is: " + playery
+            + " The quadrant is: " + "top = " + top + " flat = " + flat + " left = " + left);
             if (flat == false && top == false && left == true) {
                     degrees += (Math.PI / 48);
                     velocityX = -20 * Math.sin(degrees);
                     velocityY = -20 * Math.cos(degrees);
-                    /* System.out.println("The degrees is: " + degrees + " The player x is: " + playerx + " The player Y is: " + playery
-                            + " The velocity x is: " + velocityX + " The velocity y is: " + velocityY); */ // Debugging tool
+                            //+ " The velocity x is: " + velocityX + " The velocity y is: " + velocityY); // Debugging tool
             } else if (flat == true && top == false) {
                 velocityX = 20;
                 velocityY = 0;
@@ -122,8 +123,8 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                 velocityY = -20 * Math.cos(degrees);
             } else if (flat == false && top == true && left == false) {
                 degrees += (Math.PI / 48);
-                velocityX = -20 * Math.sin(degrees);
-                velocityY = -20 * Math.cos(degrees);
+                velocityX = -16 * Math.sin(degrees);
+                velocityY = -16 * Math.cos(degrees);
             } else if (flat == true && top == true) {
                 velocityX = -20;
                 velocityY = 0;
@@ -134,26 +135,33 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             }
         }
 
-
         //Determining where the player is on the board
         if (top == false) {
-            if (playerx > 382 && playerx < 933) {
+            if (playerx > 395 && playerx < 935) {
                 flat = true;
             } else {
                 flat = false;
             }
         } else {
-            if (playerx > 412 && playerx < 933) {
+            if (playerx > 381 && playerx < 928) {
                 flat = true;
             } else {
                 flat = false;
             }
         }
 
-        if (playery < 345) {
-            top = true;
+        if (left == true) {
+            if (playery < 345) {
+                top = true;
+            } else {
+                top = false;
+            }
         } else {
-            top = false;
+            if (playery < 286) {
+                top = true;
+            } else {
+                top = false;
+            }
         }
         if (playerx > 700) {
             left = false;
