@@ -13,12 +13,20 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
     //Variables
     double seconds = 0; //Variable for Time
     int minutes = 0; //Variable for Minutes
+    //Player Attributes
     int playerx = 110, playery = 350; //Variables for the player's position
     boolean space = false; //Variable to see if the space bar has been pressed
     int playersteps = 0; //Variable to count how many steps you've taken
     boolean flat = false, top = false, left = true; //Variables to see what part of the track you are on
     double velocityX = 0, velocityY = 0;
     double degrees = Math.PI; //Degree that the player is at
+    //Player2 Variables
+    int player2X = 160, player2Y = 350;
+    double p2Degrees = Math.PI;
+    boolean p2flat = false, p2top = false, p2left = true;
+    double p2velocityX = 0, p2velocityY = 0;
+    int countTime = 0;
+
 
     public GraphicsDemo() {
         addKeyListener(this);
@@ -57,6 +65,10 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
         //Creating the Runner
         g2D.setColor(Color.YELLOW);
         g2D.fillOval(playerx,playery,30,30);
+
+        //Competitor runner
+        g2D.setColor(Color.BLUE);
+        g2D.fillOval(player2X,player2Y,30,30);
 
 
         //Creating the Clock on Screen
@@ -101,14 +113,13 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             minutes++;
         }
         seconds += 0.01; //Time Counter
+        countTime += 1;
         //System.out.println(minutes + ":" + Math.round(seconds) + " seconds have passed");
-
-
 
         //Movement
         if (space == true) {
-            System.out.println("The degrees is: " + degrees + " The player x is: " + playerx + " The player Y is: " + playery
-            + " The quadrant is: " + "top = " + top + " flat = " + flat + " left = " + left);
+            /* System.out.println("The degrees is: " + degrees + " The player x is: " + playerx + " The player Y is: " + playery
+            + " The quadrant is: " + "top = " + top + " flat = " + flat + " left = " + left); */
             if (flat == false && top == false && left == true) {
                     degrees += (Math.PI / 48);
                     velocityX = -20 * Math.sin(degrees);
@@ -143,7 +154,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                 flat = false;
             }
         } else {
-            if (playerx > 381 && playerx < 928) {
+            if (playerx > 381 && playerx < 940) {
                 flat = true;
             } else {
                 flat = false;
@@ -176,6 +187,69 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
         }
 
         space = false;
+
+        //Competitor Movements
+        if (countTime >= 30) {
+            countTime = 0;
+            if (p2flat == false && p2top == false && p2left == true) {
+                p2Degrees += (Math.PI / 48);
+                p2velocityX = -16.5 * Math.sin(p2Degrees);
+                p2velocityY = -16.5 * Math.cos(p2Degrees);
+            } else if (p2flat == true && p2top == false) {
+                p2velocityX = 20;
+                p2velocityY = 0;
+            } else if (p2flat == false && p2top == false && p2left == false) {
+                p2Degrees += (Math.PI / 48);
+                p2velocityX = -16.5 * Math.sin(p2Degrees);
+                p2velocityY = -16.5 * Math.cos(p2Degrees);
+            } else if (p2flat == false && p2top == true && p2left == false) {
+                p2Degrees += (Math.PI / 48);
+                p2velocityX = -12 * Math.sin(p2Degrees);
+                p2velocityY = -50 * Math.cos(p2Degrees);
+            } else if (p2flat == true && p2top == true) {
+                p2velocityX = -20;
+                p2velocityY = 0;
+            } else if (p2flat == false && p2top == true && p2left == true) {
+                p2Degrees += (Math.PI / 48);
+                p2velocityX = -16.5 * Math.sin(p2Degrees);
+                p2velocityY = -16.5 * Math.cos(p2Degrees);
+            }
+
+            if (player2X > 700) {
+                p2left = true;
+            } else {
+                p2left = false;
+            }
+            if (p2left == true) {
+                if (player2Y < 345) {
+                    p2top = true;
+                } else {
+                    p2top = false;
+                }
+            } else {
+                if (player2Y < 286) {
+                    p2top = true;
+                } else {
+                    p2top = false;
+                }
+            }
+            if (p2top == false) {
+                if (player2X > 395 && player2X < 935) {
+                    p2flat = true;
+                } else {
+                    p2flat = false;
+                }
+            } else {
+                if (player2X > 381 && player2X < 940) {
+                    p2flat = true;
+                } else {
+                    p2flat = false;
+                }
+            }
+
+            player2X += p2velocityX;
+            player2Y += p2velocityY;
+        }
 
         repaint();
     }
