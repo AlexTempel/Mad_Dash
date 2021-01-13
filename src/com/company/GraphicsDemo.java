@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboard Input*/, ActionListener {
+public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboard Input */, ActionListener {
 
     Timer timer = new Timer(10,this); //Constructing a Timer
     //Variables
@@ -189,7 +189,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
         space = false;
 
         //Competitor Movements
-        if (countTime >= 10) {
+        if (countTime >= (int)(Math.random() * (35 - 10 + 1) + 10)) {
             countTime = 0;
             if (p2flat == false && p2top == false && p2left == true) {
                 p2Degrees += (Math.PI / 48);
