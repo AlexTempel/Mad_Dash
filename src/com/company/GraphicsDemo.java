@@ -13,6 +13,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
     //Variables
     double seconds = 0; //Variable for Time
     int minutes = 0; //Variable for Minutes
+    int water = 75;
     //Player Attributes
     int playerx = 110, playery = 350; //Variables for the player's position
     boolean space = false; //Variable to see if the space bar has been pressed
@@ -102,6 +103,15 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
         g2D.setFont(new Font("Bahnschrift",Font.PLAIN,70));
         g2D.drawString("Mash Spacebar", 450,450);
 
+        //Drawing Water Counter
+        ((Graphics2D) g2D).setStroke(new BasicStroke(3));
+        g2D.setColor(Color.BLUE);
+        g2D.fillRect(1175,650,(water * 2),50);
+        g2D.fillOval(1340,660,40,40);
+        g2D.fillPolygon(new int[]{1344, 1360, 1376}, new int[]{668, 640, 668}, 3);
+        g2D.setColor(Color.BLACK);
+        g2D.drawRect(1175,650,150,50);
+
     }
 
 
@@ -117,7 +127,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
         //System.out.println(minutes + ":" + Math.round(seconds) + " seconds have passed");
 
         //Movement
-        if (space == true) {
+        if (space == true && water > 0) {
             /* System.out.println("The degrees is: " + degrees + " The player x is: " + playerx + " The player Y is: " + playery
             + " The quadrant is: " + "top = " + top + " flat = " + flat + " left = " + left); */
             if (flat == false && top == false && left == true) {
@@ -181,7 +191,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
         }
 
         //Move the player when the spacebar is pressed
-        if (space == true) {
+        if (space == true && water > 0) {
             playerx += velocityX;
             playery += velocityY;
         }
@@ -263,7 +273,16 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
     }
     @Override
     public void keyReleased(KeyEvent e) {
-        space = true;
-        playersteps++;
+        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+            space = true;
+            water--;
+            playersteps++;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_W) {
+            water += 10;
+            if (water > 75) {
+                water = 75;
+            }
+        }
     }
 }
