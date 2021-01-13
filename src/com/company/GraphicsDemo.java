@@ -189,7 +189,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
         space = false;
 
         //Competitor Movements
-        if (countTime >= 30) {
+        if (countTime >= 10) {
             countTime = 0;
             if (p2flat == false && p2top == false && p2left == true) {
                 p2Degrees += (Math.PI / 48);
@@ -204,18 +204,18 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                 p2velocityY = -16.5 * Math.cos(p2Degrees);
             } else if (p2flat == false && p2top == true && p2left == false) {
                 p2Degrees += (Math.PI / 48);
-                p2velocityX = -12 * Math.sin(p2Degrees);
-                p2velocityY = -50 * Math.cos(p2Degrees);
+                p2velocityX = -16.5 * Math.sin(p2Degrees);
+                p2velocityY = -14 * Math.cos(p2Degrees);
             } else if (p2flat == true && p2top == true) {
                 p2velocityX = -20;
                 p2velocityY = 0;
             } else if (p2flat == false && p2top == true && p2left == true) {
                 p2Degrees += (Math.PI / 48);
-                p2velocityX = -16.5 * Math.sin(p2Degrees);
+                p2velocityX = -14 * Math.sin(p2Degrees);
                 p2velocityY = -16.5 * Math.cos(p2Degrees);
             }
 
-            if (player2X > 700) {
+            if (player2X < 700) {
                 p2left = true;
             } else {
                 p2left = false;
@@ -227,7 +227,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                     p2top = false;
                 }
             } else {
-                if (player2Y < 286) {
+                if (player2Y < 380) {
                     p2top = true;
                 } else {
                     p2top = false;
@@ -240,7 +240,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                     p2flat = false;
                 }
             } else {
-                if (player2X > 381 && player2X < 940) {
+                if (player2X > 400 && player2X < 940) {
                     p2flat = true;
                 } else {
                     p2flat = false;
