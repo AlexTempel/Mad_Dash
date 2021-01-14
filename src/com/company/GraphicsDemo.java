@@ -13,7 +13,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
     //Variables
     double seconds = 0; //Variable for Time
     int minutes = 0; //Variable for Minutes
-    boolean started = false;
+    boolean started = false, go = false; //See what part of the game are you a part of
     int selectionCircle = 300;
     //Player Attributes
     int playerx = 110, playery = 350; //Variables for the player's position
@@ -48,6 +48,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
 
         if (started == false) { //Start Screen
 
+            //Title and Instructions
             g2D.setColor(Color.BLACK);
             g2D.setFont(new Font("Lucida Grande", Font.PLAIN, 150));
             g2D.drawString("Mad Dash", 375, 200);
@@ -70,11 +71,19 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             g2D.setColor(Color.MAGENTA);
             g2D.fillOval(1050,525,100,100);
 
-            g2D.setColor(Color.BLACK);
+            g2D.setColor(Color.BLACK); //Show which colour you've chosen
             ((Graphics2D) g2D).setStroke(new BasicStroke(10));
             g2D.drawOval(selectionCircle,525,100,100);
 
         } else { //Main Game Screen
+
+            if (go == false) {
+                //Ready Text
+                g2D.setColor(Color.BLACK);
+                g2D.setFont(new Font("Futura", Font.BOLD, 85));
+                g2D.drawString("Get Ready", 450, 375);
+            }
+
             //Drawing Inside of the Track
             g2D.setColor(Color.DARK_GRAY);
             ((Graphics2D) g2D).setStroke(new BasicStroke(10));
@@ -120,20 +129,20 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             g2D.setColor(Color.BLACK);
             g2D.setFont(new Font("Comic Sans", Font.PLAIN, 75));
             if (minutes < 1) {
-                if (seconds < 10) {
+                if (seconds < 9.5) {
                     g2D.drawString("00:0" + Math.round(seconds), 600, 550);
                 } else {
                     g2D.drawString("00:" + Math.round(seconds), 600, 550);
                 }
             } else {
                 if (minutes < 10) {
-                    if (seconds < 10) {
+                    if (seconds < 9.5) {
                         g2D.drawString("0" + minutes + ":0" + Math.round(seconds), 600, 550);
                     } else {
                         g2D.drawString("0" + minutes + ":" + Math.round(seconds), 600, 550);
                     }
                 } else {
-                    if (seconds < 10) {
+                    if (seconds < 9.5) {
                         g2D.drawString(minutes + ":0" + Math.round(seconds), 600, 550);
                     } else {
                         g2D.drawString(minutes + ":" + Math.round(seconds), 600, 550);
@@ -149,6 +158,9 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
 
             //Drawing Water Counter
             ((Graphics2D) g2D).setStroke(new BasicStroke(3));
+            g2D.setColor(Color.WHITE);
+            g2D.setFont(new Font("Arial", Font.PLAIN, 30));
+            g2D.drawString("Press W", 1200,685);
             g2D.setColor(Color.BLUE);
             g2D.fillRect(1175, 650, (water * 2), 50);
             g2D.fillOval(1340, 660, 40, 40);
@@ -162,149 +174,150 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (seconds >= 60) {
-            seconds -= 60;
-            minutes++;
-        }
-        seconds += 0.01; //Time Counter
-        countTime += 1;
-        //System.out.println(minutes + ":" + Math.round(seconds) + " seconds have passed");
+        if (started == true && go == true) {
+            if (seconds >= 60) {
+                seconds -= 60;
+                minutes++;
+            }
+            seconds += 0.01; //Time Counter
+            countTime += 1;
+            //System.out.println(minutes + ":" + Math.round(seconds) + " seconds have passed");
 
-        //Movement
-        if (space == true && water > 0) {
+            //Movement
+            if (space == true && water > 0) {
             /* System.out.println("The degrees is: " + degrees + " The player x is: " + playerx + " The player Y is: " + playery
             + " The quadrant is: " + "top = " + top + " flat = " + flat + " left = " + left); */
-            if (flat == false && top == false && left == true) {
+                if (flat == false && top == false && left == true) {
                     degrees += (Math.PI / 48);
                     velocityX = -20 * Math.sin(degrees);
                     velocityY = -20 * Math.cos(degrees);
-                            //+ " The velocity x is: " + velocityX + " The velocity y is: " + velocityY); // Debugging tool
-            } else if (flat == true && top == false) {
-                velocityX = 20;
-                velocityY = 0;
-            } else if (flat == false && top == false && left == false) {
-                degrees += (Math.PI / 48);
-                velocityX = -20 * Math.sin(degrees);
-                velocityY = -20 * Math.cos(degrees);
-            } else if (flat == false && top == true && left == false) {
-                degrees += (Math.PI / 48);
-                velocityX = -16 * Math.sin(degrees);
-                velocityY = -16 * Math.cos(degrees);
-            } else if (flat == true && top == true) {
-                velocityX = -20;
-                velocityY = 0;
-            } else if (flat == false && top == true && left == true) {
-                degrees += (Math.PI / 48);
-                velocityX = -20 * Math.sin(degrees);
-                velocityY = -20 * Math.cos(degrees);
-            }
-        }
-
-        //Determining where the player is on the board
-        if (top == false) {
-            if (playerx > 395 && playerx < 935) {
-                flat = true;
-            } else {
-                flat = false;
-            }
-        } else {
-            if (playerx > 381 && playerx < 940) {
-                flat = true;
-            } else {
-                flat = false;
-            }
-        }
-
-        if (left == true) {
-            if (playery < 345) {
-                top = true;
-            } else {
-                top = false;
-            }
-        } else {
-            if (playery < 286) {
-                top = true;
-            } else {
-                top = false;
-            }
-        }
-        if (playerx > 700) {
-            left = false;
-        } else {
-            left = true;
-        }
-
-        //Move the player when the spacebar is pressed
-        if (space == true && water > 0) {
-            playerx += velocityX;
-            playery += velocityY;
-        }
-
-        space = false;
-
-        //Competitor Movements
-        if (countTime >= (int)(Math.random() * (35 - 10 + 1) + 10)) {
-            countTime = 0;
-            if (p2flat == false && p2top == false && p2left == true) {
-                p2Degrees += (Math.PI / 48);
-                p2velocityX = -16.5 * Math.sin(p2Degrees);
-                p2velocityY = -16.5 * Math.cos(p2Degrees);
-            } else if (p2flat == true && p2top == false) {
-                p2velocityX = 20;
-                p2velocityY = 0;
-            } else if (p2flat == false && p2top == false && p2left == false) {
-                p2Degrees += (Math.PI / 48);
-                p2velocityX = -16.5 * Math.sin(p2Degrees);
-                p2velocityY = -16.5 * Math.cos(p2Degrees);
-            } else if (p2flat == false && p2top == true && p2left == false) {
-                p2Degrees += (Math.PI / 48);
-                p2velocityX = -16.5 * Math.sin(p2Degrees);
-                p2velocityY = -14 * Math.cos(p2Degrees);
-            } else if (p2flat == true && p2top == true) {
-                p2velocityX = -20;
-                p2velocityY = 0;
-            } else if (p2flat == false && p2top == true && p2left == true) {
-                p2Degrees += (Math.PI / 48);
-                p2velocityX = -14 * Math.sin(p2Degrees);
-                p2velocityY = -16.5 * Math.cos(p2Degrees);
-            }
-
-            if (player2X < 700) {
-                p2left = true;
-            } else {
-                p2left = false;
-            }
-            if (p2left == true) {
-                if (player2Y < 345) {
-                    p2top = true;
-                } else {
-                    p2top = false;
-                }
-            } else {
-                if (player2Y < 380) {
-                    p2top = true;
-                } else {
-                    p2top = false;
-                }
-            }
-            if (p2top == false) {
-                if (player2X > 395 && player2X < 935) {
-                    p2flat = true;
-                } else {
-                    p2flat = false;
-                }
-            } else {
-                if (player2X > 400 && player2X < 940) {
-                    p2flat = true;
-                } else {
-                    p2flat = false;
+                    //+ " The velocity x is: " + velocityX + " The velocity y is: " + velocityY); // Debugging tool
+                } else if (flat == true && top == false) {
+                    velocityX = 20;
+                    velocityY = 0;
+                } else if (flat == false && top == false && left == false) {
+                    degrees += (Math.PI / 48);
+                    velocityX = -20 * Math.sin(degrees);
+                    velocityY = -20 * Math.cos(degrees);
+                } else if (flat == false && top == true && left == false) {
+                    degrees += (Math.PI / 48);
+                    velocityX = -16 * Math.sin(degrees);
+                    velocityY = -16 * Math.cos(degrees);
+                } else if (flat == true && top == true) {
+                    velocityX = -20;
+                    velocityY = 0;
+                } else if (flat == false && top == true && left == true) {
+                    degrees += (Math.PI / 48);
+                    velocityX = -20 * Math.sin(degrees);
+                    velocityY = -20 * Math.cos(degrees);
                 }
             }
 
-            player2X += p2velocityX;
-            player2Y += p2velocityY;
-        }
+            //Determining where the player is on the board
+            if (top == false) {
+                if (playerx > 395 && playerx < 935) {
+                    flat = true;
+                } else {
+                    flat = false;
+                }
+            } else {
+                if (playerx > 381 && playerx < 940) {
+                    flat = true;
+                } else {
+                    flat = false;
+                }
+            }
 
+            if (left == true) {
+                if (playery < 345) {
+                    top = true;
+                } else {
+                    top = false;
+                }
+            } else {
+                if (playery < 286) {
+                    top = true;
+                } else {
+                    top = false;
+                }
+            }
+            if (playerx > 700) {
+                left = false;
+            } else {
+                left = true;
+            }
+
+            //Move the player when the spacebar is pressed
+            if (space == true && water > 0) {
+                playerx += velocityX;
+                playery += velocityY;
+            }
+
+            space = false;
+
+            //Competitor Movements
+            if (countTime >= (int) (Math.random() * (35 - 10 + 1) + 10)) {
+                countTime = 0;
+                if (p2flat == false && p2top == false && p2left == true) {
+                    p2Degrees += (Math.PI / 48);
+                    p2velocityX = -16.5 * Math.sin(p2Degrees);
+                    p2velocityY = -16.5 * Math.cos(p2Degrees);
+                } else if (p2flat == true && p2top == false) {
+                    p2velocityX = 20;
+                    p2velocityY = 0;
+                } else if (p2flat == false && p2top == false && p2left == false) {
+                    p2Degrees += (Math.PI / 48);
+                    p2velocityX = -16.5 * Math.sin(p2Degrees);
+                    p2velocityY = -16.5 * Math.cos(p2Degrees);
+                } else if (p2flat == false && p2top == true && p2left == false) {
+                    p2Degrees += (Math.PI / 48);
+                    p2velocityX = -16.5 * Math.sin(p2Degrees);
+                    p2velocityY = -14 * Math.cos(p2Degrees);
+                } else if (p2flat == true && p2top == true) {
+                    p2velocityX = -20;
+                    p2velocityY = 0;
+                } else if (p2flat == false && p2top == true && p2left == true) {
+                    p2Degrees += (Math.PI / 48);
+                    p2velocityX = -14 * Math.sin(p2Degrees);
+                    p2velocityY = -16.5 * Math.cos(p2Degrees);
+                }
+
+                if (player2X < 700) {
+                    p2left = true;
+                } else {
+                    p2left = false;
+                }
+                if (p2left == true) {
+                    if (player2Y < 345) {
+                        p2top = true;
+                    } else {
+                        p2top = false;
+                    }
+                } else {
+                    if (player2Y < 380) {
+                        p2top = true;
+                    } else {
+                        p2top = false;
+                    }
+                }
+                if (p2top == false) {
+                    if (player2X > 395 && player2X < 935) {
+                        p2flat = true;
+                    } else {
+                        p2flat = false;
+                    }
+                } else {
+                    if (player2X > 400 && player2X < 940) {
+                        p2flat = true;
+                    } else {
+                        p2flat = false;
+                    }
+                }
+
+                player2X += p2velocityX;
+                player2Y += p2velocityY;
+            }
+        }
         repaint();
     }
 
@@ -317,21 +330,22 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
     }
     @Override
     public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+        if (e.getKeyCode() == KeyEvent.VK_SPACE && started == true) {
             space = true;
+            go = true;
             water--;
             playersteps++;
         }
-        if (e.getKeyCode() == KeyEvent.VK_W) {
+        if (e.getKeyCode() == KeyEvent.VK_W && started == true) {
             water += 10;
             if (water > 75) {
                 water = 75;
             }
         }
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+        if (e.getKeyCode() == KeyEvent.VK_ENTER && started == false) {
             started = true;
         }
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT && started == false) {
             colorPicked += 1;
             selectionCircle += 150;
             if (colorPicked > 6) {
@@ -341,7 +355,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                 selectionCircle = 1050;
             }
         }
-        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+        if (e.getKeyCode() == KeyEvent.VK_LEFT && started == false) {
             colorPicked -= 1;
             selectionCircle -= 150;
             if (colorPicked < 1) {
