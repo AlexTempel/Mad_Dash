@@ -13,7 +13,8 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
     //Variables
     double seconds = 0; //Variable for Time
     int minutes = 0; //Variable for Minutes
-    int water = 75;
+    boolean started = false;
+    int selectionCircle = 300;
     //Player Attributes
     int playerx = 110, playery = 350; //Variables for the player's position
     boolean space = false; //Variable to see if the space bar has been pressed
@@ -21,6 +22,8 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
     boolean flat = false, top = false, left = true; //Variables to see what part of the track you are on
     double velocityX = 0, velocityY = 0;
     double degrees = Math.PI; //Degree that the player is at
+    int water = 75;
+    int colorPicked = 1;
     //Player2 Variables
     int player2X = 160, player2Y = 350;
     double p2Degrees = Math.PI;
@@ -43,75 +46,116 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
 
         Graphics g2D = (Graphics2D) g;
 
-        //Drawing Inside of the Track
-        g2D.setColor(Color.DARK_GRAY);
-        ((Graphics2D) g2D).setStroke(new BasicStroke(10));
-        g2D.drawArc(200,150,425,425,90,180);
-        g2D.drawArc(750,150,425,425,90,-180);
-        g2D.drawLine(412,150,963,150);
-        g2D.drawLine(412,575,963,575);
+        if (started == false) { //Start Screen
 
-        //Drawing Running Lines
-        g2D.setColor(Color.WHITE);
-        ((Graphics2D) g2D).setStroke(new BasicStroke(5));
-        g2D.drawArc(150,100,525,525,90,180);
-        g2D.drawArc(100,50,625,625,90,180);
-        g2D.drawLine(412,100,963,100);
-        g2D.drawLine(412,50,963,50);
-        g2D.drawLine(412,625,963,625);
-        g2D.drawLine(412,675,963,675);
-        g2D.drawArc(700,100,525,525,90,-180);
-        g2D.drawArc(650,50,625,625,90,-180);
+            g2D.setColor(Color.BLACK);
+            g2D.setFont(new Font("Lucida Grande", Font.PLAIN, 150));
+            g2D.drawString("Mad Dash", 375, 200);
+            g2D.setFont(new Font("Cochin", Font.PLAIN, 80));
+            g2D.drawString("Press Enter when Ready", 300, 300);
 
-        //Creating the Runner
-        g2D.setColor(Color.YELLOW);
-        g2D.fillOval(playerx,playery,30,30);
+            //Color Picker
+            g2D.setFont(new Font("Baskerville", Font.PLAIN, 60));
+            g2D.drawString("Pick your Colour", 525, 450);
+            g2D.setColor(Color.YELLOW);
+            g2D.fillOval(300,525,100,100);
+            g2D.setColor(Color.RED);
+            g2D.fillOval(450,525,100,100);
+            g2D.setColor(Color.PINK);
+            g2D.fillOval(600,525,100,100);
+            g2D.setColor(Color.GREEN);
+            g2D.fillOval(750,525,100,100);
+            g2D.setColor(Color.ORANGE);
+            g2D.fillOval(900,525,100,100);
+            g2D.setColor(Color.MAGENTA);
+            g2D.fillOval(1050,525,100,100);
 
-        //Competitor runner
-        g2D.setColor(Color.BLUE);
-        g2D.fillOval(player2X,player2Y,30,30);
+            g2D.setColor(Color.BLACK);
+            ((Graphics2D) g2D).setStroke(new BasicStroke(10));
+            g2D.drawOval(selectionCircle,525,100,100);
 
+        } else { //Main Game Screen
+            //Drawing Inside of the Track
+            g2D.setColor(Color.DARK_GRAY);
+            ((Graphics2D) g2D).setStroke(new BasicStroke(10));
+            g2D.drawArc(200, 150, 425, 425, 90, 180);
+            g2D.drawArc(750, 150, 425, 425, 90, -180);
+            g2D.drawLine(412, 150, 963, 150);
+            g2D.drawLine(412, 575, 963, 575);
 
-        //Creating the Clock on Screen
-        g2D.setColor(Color.BLACK);
-        g2D.setFont(new Font("Comic Sans",Font.PLAIN,75));
-        if (minutes < 1) {
-            if (seconds < 10 ) {
-                g2D.drawString("00:0" + Math.round(seconds),600,550);
-            } else{
-                g2D.drawString("00:" + Math.round(seconds),600,550);
+            //Drawing Running Lines
+            g2D.setColor(Color.WHITE);
+            ((Graphics2D) g2D).setStroke(new BasicStroke(5));
+            g2D.drawArc(150, 100, 525, 525, 90, 180);
+            g2D.drawArc(100, 50, 625, 625, 90, 180);
+            g2D.drawLine(412, 100, 963, 100);
+            g2D.drawLine(412, 50, 963, 50);
+            g2D.drawLine(412, 625, 963, 625);
+            g2D.drawLine(412, 675, 963, 675);
+            g2D.drawArc(700, 100, 525, 525, 90, -180);
+            g2D.drawArc(650, 50, 625, 625, 90, -180);
+
+            //Creating the Runner
+            if (colorPicked == 1) {
+                g2D.setColor(Color.YELLOW);
+            } else if (colorPicked == 2) {
+                g2D.setColor(Color.RED);
+            } else if (colorPicked == 3) {
+                g2D.setColor(Color.PINK);
+            } else if (colorPicked == 4) {
+                g2D.setColor(Color.GREEN);
+            } else if (colorPicked == 5) {
+                g2D.setColor(Color.ORANGE);
+            } else if (colorPicked == 6) {
+                g2D.setColor(Color.MAGENTA);
             }
-        } else {
-            if (minutes < 10) {
+            g2D.fillOval(playerx, playery, 30, 30);
+
+            //Competitor runner
+            g2D.setColor(Color.BLUE);
+            g2D.fillOval(player2X, player2Y, 30, 30);
+
+
+            //Creating the Clock on Screen
+            g2D.setColor(Color.BLACK);
+            g2D.setFont(new Font("Comic Sans", Font.PLAIN, 75));
+            if (minutes < 1) {
                 if (seconds < 10) {
-                    g2D.drawString("0" + minutes + ":0" + Math.round(seconds),600,550);
+                    g2D.drawString("00:0" + Math.round(seconds), 600, 550);
                 } else {
-                    g2D.drawString("0" + minutes + ":" + Math.round(seconds),600,550);
+                    g2D.drawString("00:" + Math.round(seconds), 600, 550);
                 }
             } else {
-                if (seconds < 10) {
-                    g2D.drawString( minutes + ":0" + Math.round(seconds),600,550);
+                if (minutes < 10) {
+                    if (seconds < 10) {
+                        g2D.drawString("0" + minutes + ":0" + Math.round(seconds), 600, 550);
+                    } else {
+                        g2D.drawString("0" + minutes + ":" + Math.round(seconds), 600, 550);
+                    }
                 } else {
-                    g2D.drawString(minutes + ":" + Math.round(seconds),600,550);
+                    if (seconds < 10) {
+                        g2D.drawString(minutes + ":0" + Math.round(seconds), 600, 550);
+                    } else {
+                        g2D.drawString(minutes + ":" + Math.round(seconds), 600, 550);
+                    }
                 }
             }
+
+            //Added Title and Instructions
+            g2D.setFont(new Font("Oxygen", Font.BOLD, 120));
+            g2D.drawString("MAD DASH", 350, 300);
+            g2D.setFont(new Font("Bahnschrift", Font.PLAIN, 70));
+            g2D.drawString("Mash Spacebar", 450, 450);
+
+            //Drawing Water Counter
+            ((Graphics2D) g2D).setStroke(new BasicStroke(3));
+            g2D.setColor(Color.BLUE);
+            g2D.fillRect(1175, 650, (water * 2), 50);
+            g2D.fillOval(1340, 660, 40, 40);
+            g2D.fillPolygon(new int[]{1344, 1360, 1376}, new int[]{668, 640, 668}, 3);
+            g2D.setColor(Color.BLACK);
+            g2D.drawRect(1175, 650, 150, 50);
         }
-
-        //Added Title and Instructions
-        g2D.setFont(new Font("Oxygen",Font.BOLD,120));
-        g2D.drawString("MAD DASH", 350,300);
-        g2D.setFont(new Font("Bahnschrift",Font.PLAIN,70));
-        g2D.drawString("Mash Spacebar", 450,450);
-
-        //Drawing Water Counter
-        ((Graphics2D) g2D).setStroke(new BasicStroke(3));
-        g2D.setColor(Color.BLUE);
-        g2D.fillRect(1175,650,(water * 2),50);
-        g2D.fillOval(1340,660,40,40);
-        g2D.fillPolygon(new int[]{1344, 1360, 1376}, new int[]{668, 640, 668}, 3);
-        g2D.setColor(Color.BLACK);
-        g2D.drawRect(1175,650,150,50);
-
     }
 
 
@@ -282,6 +326,29 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             water += 10;
             if (water > 75) {
                 water = 75;
+            }
+        }
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            started = true;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            colorPicked += 1;
+            selectionCircle += 150;
+            if (colorPicked > 6) {
+                colorPicked = 6;
+            }
+            if (selectionCircle > 1050) {
+                selectionCircle = 1050;
+            }
+        }
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            colorPicked -= 1;
+            selectionCircle -= 150;
+            if (colorPicked < 1) {
+                colorPicked = 0;
+            }
+            if (selectionCircle < 300) {
+                selectionCircle = 300;
             }
         }
     }
