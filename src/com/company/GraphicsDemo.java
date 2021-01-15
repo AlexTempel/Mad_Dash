@@ -13,7 +13,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
     //Variables
     double seconds = 0; //Variable for Time
     int minutes = 0; //Variable for Minutes
-    boolean started = false, go = false; //See what part of the game are you a part of
+    boolean started = false, go = false, finished = false; //See what part of the game are you a part of
     int selectionCircle = 300; //Where the selected color circle is
     int difficulty = 3; //What difficulty is it
     //Player Attributes
@@ -54,7 +54,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             g2D.setFont(new Font("Lucida Grande", Font.PLAIN, 150));
             g2D.drawString("Mad Dash", 375, 200);
             g2D.setFont(new Font("Cochin", Font.PLAIN, 80));
-            g2D.drawString("Press Enter when Ready", 300, 300);
+            g2D.drawString("Press Enter when Ready", 325, 300);
 
             //Difficulty
             g2D.setFont(new Font("Menlo", Font.PLAIN, 50));
@@ -82,7 +82,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
 
 
 
-        } else { //Main Game Screen
+        } else if (started == true && finished == false){ //Main Game Screen
 
             if (go == false) {
                 //Ready Text
@@ -101,8 +101,6 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             g2D.fillRect(125,360,25,10);
             g2D.fillRect(150,350,25,10);
             g2D.fillRect(175,360,25,10);
-
-
 
             //Drawing Inside of the Track
             g2D.setColor(Color.DARK_GRAY);
@@ -189,6 +187,44 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             g2D.drawRect(1175, 650, 150, 50);
 
 
+        } else if (finished == true && started == true) {
+            g2D.setColor(Color.BLACK);
+            g2D.setFont(new Font("Big Caslon", Font.BOLD,140));
+            g2D.drawString("Game Over", 400,125);
+            g2D.setFont(new Font("Avenir Next", Font.PLAIN,100));
+            //Final Time
+            g2D.drawString("Time", 100,250);
+            g2D.drawString("Place", 1000,250);
+            g2D.setFont(new Font("American Typewriter", Font.PLAIN,90));
+            if (minutes < 1) {
+                if (seconds < 9.5) {
+                    g2D.drawString("00:0" + Math.round(seconds), 100, 350);
+                } else {
+                    g2D.drawString("00:" + Math.round(seconds), 100, 350);
+                }
+            } else {
+                if (minutes < 10) {
+                    if (seconds < 9.5) {
+                        g2D.drawString("0" + minutes + ":0" + Math.round(seconds), 100, 350);
+                    } else {
+                        g2D.drawString("0" + minutes + ":" + Math.round(seconds), 100, 350);
+                    }
+                } else {
+                    if (seconds < 9.5) {
+                        g2D.drawString(minutes + ":0" + Math.round(seconds), 100, 350);
+                    } else {
+                        g2D.drawString(minutes + ":" + Math.round(seconds), 100, 350);
+                    }
+                }
+            }
+
+            //Place
+            if (degrees > p2Degrees) {
+                g2D.drawString("First", 1000,350);
+            } else {
+                g2D.drawString("Second", 975,350);
+            }
+
         }
     }
 
@@ -196,7 +232,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (started == true && go == true) {
+        if (started == true && go == true && finished == false) {
             if (seconds >= 60) {
                 seconds -= 60;
                 minutes++;
@@ -355,8 +391,13 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
         if (e.getKeyCode() == KeyEvent.VK_SPACE && started == true) { //What happens when spacebar is pressed
             space = true;
             go = true;
-            water--;
-            playersteps++;
+            if (water > 0) {
+                water--;
+                playersteps++;
+            }
+            if (playersteps > 150) {
+                finished = true;
+            }
         }
         if (e.getKeyCode() == KeyEvent.VK_W && started == true) { //What happens when W is pressed
             water += 10;
