@@ -9,22 +9,22 @@ import java.awt.event.KeyListener;
 
 public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboard Input */, ActionListener {
 
-    Timer timer = new Timer(10,this); //Constructing a Timer
+    Timer timer = new Timer(10,this); //Creating a Timer
     //Variables
     double seconds = 0; //Variable for Time
     int minutes = 0; //Variable for Minutes
     boolean started = false, go = false; //See what part of the game are you a part of
-    int selectionCircle = 300;
-    int difficulty = 3;
+    int selectionCircle = 300; //Where the selected color circle is
+    int difficulty = 3; //What difficulty is it
     //Player Attributes
     int playerx = 110, playery = 350; //Variables for the player's position
     boolean space = false; //Variable to see if the space bar has been pressed
     int playersteps = 0; //Variable to count how many steps you've taken
     boolean flat = false, top = false, left = true; //Variables to see what part of the track you are on
-    double velocityX = 0, velocityY = 0;
+    double velocityX = 0, velocityY = 0; //Speed that the player moves
     double degrees = Math.PI; //Degree that the player is at
-    int water = 75;
-    int colorPicked = 1;
+    int water = 75; //How hydrated is the player
+    int colorPicked = 1; //What color is the player
     //Player2 Variables
     int player2X = 160, player2Y = 350;
     double p2Degrees = Math.PI;
@@ -90,6 +90,19 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                 g2D.setFont(new Font("Futura", Font.BOLD, 85));
                 g2D.drawString("Get Ready", 450, 375);
             }
+
+
+            //Drawing Finishing line
+            ((Graphics2D) g2D).setStroke(new BasicStroke(2));
+            g2D.setColor(Color.BLACK);
+            g2D.fillRect(100,350,100,20);
+            g2D.setColor(Color.WHITE);
+            g2D.fillRect(100,350,25,10);
+            g2D.fillRect(125,360,25,10);
+            g2D.fillRect(150,350,25,10);
+            g2D.fillRect(175,360,25,10);
+
+
 
             //Drawing Inside of the Track
             g2D.setColor(Color.DARK_GRAY);
@@ -174,6 +187,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             g2D.fillPolygon(new int[]{1344, 1360, 1376}, new int[]{668, 640, 668}, 3);
             g2D.setColor(Color.BLACK);
             g2D.drawRect(1175, 650, 150, 50);
+
 
         }
     }
@@ -338,22 +352,22 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
     }
     @Override
     public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_SPACE && started == true) {
+        if (e.getKeyCode() == KeyEvent.VK_SPACE && started == true) { //What happens when spacebar is pressed
             space = true;
             go = true;
             water--;
             playersteps++;
         }
-        if (e.getKeyCode() == KeyEvent.VK_W && started == true) {
+        if (e.getKeyCode() == KeyEvent.VK_W && started == true) { //What happens when W is pressed
             water += 10;
             if (water > 75) {
                 water = 75;
             }
         }
-        if (e.getKeyCode() == KeyEvent.VK_ENTER && started == false) {
+        if (e.getKeyCode() == KeyEvent.VK_ENTER && started == false) { //What happens when enter is pressed
             started = true;
         }
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT && started == false) {
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT && started == false) { //What happens when the right arrow is pressed
             colorPicked++;
             selectionCircle += 150;
             if (colorPicked > 6) {
@@ -363,7 +377,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                 selectionCircle = 1050;
             }
         }
-        if (e.getKeyCode() == KeyEvent.VK_LEFT && started == false) {
+        if (e.getKeyCode() == KeyEvent.VK_LEFT && started == false) { //What happens when the left arrow is pressed
             colorPicked--;
             selectionCircle -= 150;
             if (colorPicked < 1) {
@@ -373,13 +387,13 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                 selectionCircle = 300;
             }
         }
-        if (e.getKeyCode() == KeyEvent.VK_UP && started == false) {
+        if (e.getKeyCode() == KeyEvent.VK_UP && started == false) { //What happens when the up arrow is pressed
             difficulty++;
-            if (difficulty > 5) {
-                difficulty = 5;
+            if (difficulty > 10) {
+                difficulty = 10;
             }
         }
-        if (e.getKeyCode() == KeyEvent.VK_DOWN && started == false) {
+        if (e.getKeyCode() == KeyEvent.VK_DOWN && started == false) { //What happens when the down arrow is pressed
             difficulty--;
             if (difficulty < 1) {
                 difficulty = 1;
