@@ -15,6 +15,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
     int minutes = 0; //Variable for Minutes
     boolean started = false, go = false; //See what part of the game are you a part of
     int selectionCircle = 300;
+    int difficulty = 3;
     //Player Attributes
     int playerx = 110, playery = 350; //Variables for the player's position
     boolean space = false; //Variable to see if the space bar has been pressed
@@ -55,6 +56,10 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             g2D.setFont(new Font("Cochin", Font.PLAIN, 80));
             g2D.drawString("Press Enter when Ready", 300, 300);
 
+            //Difficulty
+            g2D.setFont(new Font("Menlo", Font.PLAIN, 50));
+            g2D.drawString("Difficulty: " + difficulty, 525,375);
+
             //Color Picker
             g2D.setFont(new Font("Baskerville", Font.PLAIN, 60));
             g2D.drawString("Pick your Colour", 525, 450);
@@ -74,6 +79,8 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             g2D.setColor(Color.BLACK); //Show which colour you've chosen
             ((Graphics2D) g2D).setStroke(new BasicStroke(10));
             g2D.drawOval(selectionCircle,525,100,100);
+
+
 
         } else { //Main Game Screen
 
@@ -167,6 +174,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             g2D.fillPolygon(new int[]{1344, 1360, 1376}, new int[]{668, 640, 668}, 3);
             g2D.setColor(Color.BLACK);
             g2D.drawRect(1175, 650, 150, 50);
+
         }
     }
 
@@ -256,7 +264,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             space = false;
 
             //Competitor Movements
-            if (countTime >= (int) (Math.random() * (35 - 10 + 1) + 10)) {
+            if (countTime >= (int) (Math.random() * (40 - 15 + 1) + 15) / difficulty * 3) {
                 countTime = 0;
                 if (p2flat == false && p2top == false && p2left == true) {
                     p2Degrees += (Math.PI / 48);
@@ -346,7 +354,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             started = true;
         }
         if (e.getKeyCode() == KeyEvent.VK_RIGHT && started == false) {
-            colorPicked += 1;
+            colorPicked++;
             selectionCircle += 150;
             if (colorPicked > 6) {
                 colorPicked = 6;
@@ -356,13 +364,25 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_LEFT && started == false) {
-            colorPicked -= 1;
+            colorPicked--;
             selectionCircle -= 150;
             if (colorPicked < 1) {
                 colorPicked = 0;
             }
             if (selectionCircle < 300) {
                 selectionCircle = 300;
+            }
+        }
+        if (e.getKeyCode() == KeyEvent.VK_UP && started == false) {
+            difficulty++;
+            if (difficulty > 5) {
+                difficulty = 5;
+            }
+        }
+        if (e.getKeyCode() == KeyEvent.VK_DOWN && started == false) {
+            difficulty--;
+            if (difficulty < 1) {
+                difficulty = 1;
             }
         }
     }
