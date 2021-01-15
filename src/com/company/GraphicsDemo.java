@@ -54,7 +54,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             g2D.setFont(new Font("Lucida Grande", Font.PLAIN, 150));
             g2D.drawString("Mad Dash", 375, 200);
             g2D.setFont(new Font("Cochin", Font.PLAIN, 80));
-            g2D.drawString("Press Enter when Ready", 325, 300);
+            g2D.drawString("Press Enter when Ready", 350, 300);
 
             //Difficulty
             g2D.setFont(new Font("Menlo", Font.PLAIN, 50));
