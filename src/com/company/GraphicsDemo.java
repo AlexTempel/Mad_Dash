@@ -16,6 +16,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
     boolean started = false, go = false, finished = false; //See what part of the game are you a part of
     int selectionCircle = 300; //Where the selected color circle is
     int difficulty = 3; //What difficulty is it
+    int laps = 1; //How many Laps
     //Player Attributes
     int playerx = 110, playery = 350; //Variables for the player's position
     boolean space = false; //Variable to see if the space bar has been pressed
@@ -58,7 +59,9 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
 
             //Difficulty
             g2D.setFont(new Font("Menlo", Font.PLAIN, 50));
-            g2D.drawString("Difficulty: " + difficulty, 525,375);
+            g2D.drawString("Difficulty: " + difficulty, 125,375);
+            //Laps
+            g2D.drawString("Laps: " + laps, 1000,375);
 
             //Color Picker
             g2D.setFont(new Font("Baskerville", Font.PLAIN, 60));
@@ -220,7 +223,9 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
 
             //Place
             if (degrees > p2Degrees) {
-                g2D.drawString("First", 1000,350);
+                g2D.drawString("First", 1000, 350);
+            } else if (degrees == p2Degrees) {
+                g2D.drawString("Tie", 1050,350);
             } else {
                 g2D.drawString("Second", 975,350);
             }
@@ -395,7 +400,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                 water--;
                 playersteps++;
             }
-            if (playersteps > 150) {
+            if (playersteps > 150 * laps) {
                 finished = true;
             }
         }
@@ -439,6 +444,13 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             if (difficulty < 1) {
                 difficulty = 1;
             }
+        }
+        if (e.getKeyCode() == KeyEvent.VK_1 && started == false) { //Changes the amount of laps
+            laps = 1;
+        } else if (e.getKeyCode() == KeyEvent.VK_2 && started == false) {
+            laps = 2;
+        } else if (e.getKeyCode() == KeyEvent.VK_3 && started == false) {
+            laps = 3;
         }
     }
 }
