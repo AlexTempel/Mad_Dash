@@ -13,10 +13,13 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
     //Variables
     double seconds = 0; //Variable for Time
     int minutes = 0; //Variable for Minutes
-    boolean started = false, go = false, finished = false; //See what part of the game are you a part of
+    boolean started = false, go = false, finished = false, options = false; //See what part of the game are you a part of
+    boolean optionPicker = false; //Pick if you want to go to options or not
+    int whichOption = 1; //Which option you pick in the options screen
     int selectionCircle = 300; //Where the selected color circle is
     int difficulty = 3; //What difficulty is it
     int laps = 1; //How many Laps
+    boolean needWater = true, needAir = false; //If you want to need to breathe air and hydrate during the race
     //Player Attributes
     int playerx = 110, playery = 350; //Variables for the player's position
     boolean space = false; //Variable to see if the space bar has been pressed
@@ -48,42 +51,65 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
 
         Graphics g2D = (Graphics2D) g;
 
-        if (started == false) { //Start Screen
+        if (started == false && options == false) { //Start Screen
 
             //Title and Instructions
             g2D.setColor(Color.BLACK);
             g2D.setFont(new Font("Lucida Grande", Font.PLAIN, 150));
             g2D.drawString("Mad Dash", 375, 200);
-            g2D.setFont(new Font("Cochin", Font.PLAIN, 80));
-            g2D.drawString("Press Enter when Ready", 350, 300);
+            if (optionPicker == false) {
+                g2D.setFont(new Font("Anadale Mono", Font.BOLD, 120));
+                g2D.drawString("Start", 575, 400);
+                g2D.setFont(new Font("Anadale Mono", Font.PLAIN, 100));
+                g2D.drawString("Options", 500, 550);
+            } else if (optionPicker == true) {
+                g2D.setFont(new Font("Anadale Mono", Font.PLAIN, 100));
+                g2D.drawString("Start", 575, 400);
+                g2D.setFont(new Font("Anadale Mono", Font.BOLD, 120));
+                g2D.drawString("Options", 500, 550);
+            }
 
+        } else if (started == false && options == true) { //Options Screen
+
+            g2D.setFont(new Font("Lucida Grande", Font.PLAIN, 40));
+            g2D.drawString("Press Esc to Exit", 30, 50);
             //Difficulty
             g2D.setFont(new Font("Menlo", Font.PLAIN, 50));
-            g2D.drawString("Difficulty: " + difficulty, 125,375);
+            g2D.drawString("Difficulty: " + difficulty, 500, 175);
             //Laps
-            g2D.drawString("Laps: " + laps, 1000,375);
+            g2D.drawString("Laps: " + laps, 600, 75);
+            //Air
+            g2D.drawString("Water on: " + needWater, 500, 275);
 
             //Color Picker
             g2D.setFont(new Font("Baskerville", Font.PLAIN, 60));
             g2D.drawString("Pick your Colour", 525, 450);
             g2D.setColor(Color.YELLOW);
-            g2D.fillOval(300,525,100,100);
+            g2D.fillOval(300, 525, 100, 100);
             g2D.setColor(Color.RED);
-            g2D.fillOval(450,525,100,100);
+            g2D.fillOval(450, 525, 100, 100);
             g2D.setColor(Color.PINK);
-            g2D.fillOval(600,525,100,100);
+            g2D.fillOval(600, 525, 100, 100);
             g2D.setColor(Color.GREEN);
-            g2D.fillOval(750,525,100,100);
+            g2D.fillOval(750, 525, 100, 100);
             g2D.setColor(Color.ORANGE);
-            g2D.fillOval(900,525,100,100);
+            g2D.fillOval(900, 525, 100, 100);
             g2D.setColor(Color.MAGENTA);
-            g2D.fillOval(1050,525,100,100);
+            g2D.fillOval(1050, 525, 100, 100);
 
             g2D.setColor(Color.BLACK); //Show which colour you've chosen
             ((Graphics2D) g2D).setStroke(new BasicStroke(10));
-            g2D.drawOval(selectionCircle,525,100,100);
+            g2D.drawOval(selectionCircle, 525, 100, 100);
 
-
+            if (whichOption == 1) {
+                g2D.drawRect(575, 25, 250, 75);
+            } else if (whichOption == 2) {
+                g2D.drawRect(475, 125, 450, 75);
+            } else if (whichOption == 3){
+                g2D.drawRect(475,225,500,75);
+            } else if (whichOption == 4) {
+                g2D.drawRect(250,400,975,250);
+            }
 
         } else if (started == true && finished == false){ //Main Game Screen
 
@@ -178,16 +204,22 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             g2D.drawString("Mash Spacebar", 450, 450);
 
             //Drawing Water Counter
-            ((Graphics2D) g2D).setStroke(new BasicStroke(3));
-            g2D.setColor(Color.WHITE);
-            g2D.setFont(new Font("Arial", Font.PLAIN, 30));
-            g2D.drawString("Press W", 1200,685);
-            g2D.setColor(Color.BLUE);
-            g2D.fillRect(1175, 650, (water * 2), 50);
-            g2D.fillOval(1340, 660, 40, 40);
-            g2D.fillPolygon(new int[]{1344, 1360, 1376}, new int[]{668, 640, 668}, 3);
-            g2D.setColor(Color.BLACK);
-            g2D.drawRect(1175, 650, 150, 50);
+            if (needWater == true) {
+                ((Graphics2D) g2D).setStroke(new BasicStroke(3));
+                g2D.setColor(Color.WHITE);
+                g2D.setFont(new Font("Arial", Font.PLAIN, 30));
+                g2D.drawString("Press W", 1200, 685);
+                g2D.setColor(Color.BLUE);
+                g2D.fillRect(1175, 650, (water * 2), 50);
+                g2D.fillOval(1340, 660, 40, 40);
+                g2D.fillPolygon(new int[]{1344, 1360, 1376}, new int[]{668, 640, 668}, 3);
+                g2D.setColor(Color.BLACK);
+                g2D.drawRect(1175, 650, 150, 50);
+            }
+
+            if (needAir == true) {
+
+            }
 
 
         } else if (finished == true && started == true) {
@@ -397,7 +429,9 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             space = true;
             go = true;
             if (water > 0) {
-                water--;
+                if (needWater == true) {
+                    water--;
+                }
                 playersteps++;
             }
             if (playersteps > 150 * laps) {
@@ -411,46 +445,90 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_ENTER && started == false) { //What happens when enter is pressed
-            started = true;
-        }
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT && started == false) { //What happens when the right arrow is pressed
-            colorPicked++;
-            selectionCircle += 150;
-            if (colorPicked > 6) {
-                colorPicked = 6;
-            }
-            if (selectionCircle > 1050) {
-                selectionCircle = 1050;
+            if (optionPicker == false) {
+                started = true;
+            } else if (optionPicker == true) {
+                options = true;
             }
         }
-        if (e.getKeyCode() == KeyEvent.VK_LEFT && started == false) { //What happens when the left arrow is pressed
-            colorPicked--;
-            selectionCircle -= 150;
-            if (colorPicked < 1) {
-                colorPicked = 0;
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE && started == false && options == true) { //What happens when you press escape
+            options = false;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT && started == false && options == true) { //What happens when the right arrow is pressed
+            if (whichOption == 4) {
+                colorPicked++;
+                selectionCircle += 150;
+                if (colorPicked > 6) {
+                    colorPicked = 6;
+                }
+                if (selectionCircle > 1050) {
+                    selectionCircle = 1050;
+                }
+            } else if (whichOption == 3) {
+                if (needWater == true) {
+                    needWater = false;
+                } else if (needWater == false) {
+                    needWater = true;
+                }
+            } else if (whichOption == 2) {
+                difficulty++;
+                if (difficulty > 10) {
+                    difficulty = 10;
+                }
+            } else if (whichOption == 1) {
+                laps++;
+                if (laps > 3) {
+                    laps = 3;
+                }
             }
-            if (selectionCircle < 300) {
-                selectionCircle = 300;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_LEFT && started == false && options == true) { //What happens when the left arrow is pressed
+            if (whichOption == 4) {
+                colorPicked--;
+                selectionCircle -= 150;
+                if (colorPicked < 1) {
+                    colorPicked = 0;
+                }
+                if (selectionCircle < 300) {
+                    selectionCircle = 300;
+                }
+            } else if (whichOption == 3) {
+                if (needWater == true){
+                    needWater = false;
+                } else  if (needWater == false) {
+                    needWater = true;
+                }
+            } else if (whichOption == 2) {
+                difficulty--;
+                if (difficulty < 1) {
+                    difficulty = 1;
+                }
+            } else if (whichOption == 1) {
+                laps--;
+                if (laps < 1) {
+                    laps = 1;
+                }
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_UP && started == false) { //What happens when the up arrow is pressed
-            difficulty++;
-            if (difficulty > 10) {
-                difficulty = 10;
+            if (options == true) {
+                whichOption--;
+                if (whichOption < 1) {
+                    whichOption = 1;
+                }
+            } else if (options == false) {
+                optionPicker = false;
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_DOWN && started == false) { //What happens when the down arrow is pressed
-            difficulty--;
-            if (difficulty < 1) {
-                difficulty = 1;
+            if (options == true) {
+                whichOption++;
+                if (whichOption > 4) {
+                    whichOption = 4;
+                }
+            } else if (options == false) {
+                optionPicker = true;
             }
-        }
-        if (e.getKeyCode() == KeyEvent.VK_1 && started == false) { //Changes the amount of laps
-            laps = 1;
-        } else if (e.getKeyCode() == KeyEvent.VK_2 && started == false) {
-            laps = 2;
-        } else if (e.getKeyCode() == KeyEvent.VK_3 && started == false) {
-            laps = 3;
         }
     }
 }
