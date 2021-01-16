@@ -28,6 +28,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
     double velocityX = 0, velocityY = 0; //Speed that the player moves
     double degrees = Math.PI; //Degree that the player is at
     int water = 75; //How hydrated is the player
+    int air = 20; //How much air is in their lungs
     int colorPicked = 1; //What color is the player
     //Player2 Variables
     int player2X = 160, player2Y = 350;
@@ -78,8 +79,10 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             g2D.drawString("Difficulty: " + difficulty, 500, 175);
             //Laps
             g2D.drawString("Laps: " + laps, 600, 75);
-            //Air
+            //Water
             g2D.drawString("Water on: " + needWater, 500, 275);
+            //Air
+            g2D.drawString("Air on: " + needAir, 500, 350);
 
             //Color Picker
             g2D.setFont(new Font("Baskerville", Font.PLAIN, 60));
@@ -105,9 +108,11 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                 g2D.drawRect(575, 25, 250, 75);
             } else if (whichOption == 2) {
                 g2D.drawRect(475, 125, 450, 75);
-            } else if (whichOption == 3){
-                g2D.drawRect(475,225,500,75);
+            } else if (whichOption == 3) {
+                g2D.drawRect(475, 225, 500, 75);
             } else if (whichOption == 4) {
+                g2D.drawRect(475,300,450,75);
+            } else if (whichOption == 5) {
                 g2D.drawRect(250,400,975,250);
             }
 
@@ -216,13 +221,20 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                 g2D.setColor(Color.BLACK);
                 g2D.drawRect(1175, 650, 150, 50);
             }
-
+            //Drawing Air
             if (needAir == true) {
-
+                g2D.setColor(Color.GREEN);
+                g2D.drawString("A", 90,685);
+                g2D.setColor(Color.WHITE);
+                g2D.fillRect(60,650,(air * 3),50);
+                g2D.fillOval(10,650,30,45);
+                g2D.fillOval(30,650,25,40);
+                g2D.setColor(Color.BLACK);
+                g2D.drawRect(60,650,60,50);
             }
 
 
-        } else if (finished == true && started == true) {
+        } else if (finished == true && started == true) { //End Screen
             g2D.setColor(Color.BLACK);
             g2D.setFont(new Font("Big Caslon", Font.BOLD,140));
             g2D.drawString("Game Over", 400,125);
@@ -279,7 +291,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             //System.out.println(minutes + ":" + Math.round(seconds) + " seconds have passed");
 
             //Movement
-            if (space == true && water > 0) {
+            if (space == true && water > 0 && air > 0) {
             /* System.out.println("The degrees is: " + degrees + " The player x is: " + playerx + " The player Y is: " + playery
             + " The quadrant is: " + "top = " + top + " flat = " + flat + " left = " + left); */
                 if (flat == false && top == false && left == true) {
@@ -343,7 +355,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             }
 
             //Move the player when the spacebar is pressed
-            if (space == true && water > 0) {
+            if (space == true && water > 0 && air > 0) {
                 playerx += velocityX;
                 playery += velocityY;
             }
@@ -432,7 +444,15 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                 if (needWater == true) {
                     water--;
                 }
-                playersteps++;
+                if (air > 0) {
+                    playersteps++;
+                }
+            }
+            if (needAir == true) {
+                air--;
+                if (air < 0) {
+                    air = 0;
+                }
             }
             if (playersteps > 150 * laps) {
                 finished = true;
@@ -443,6 +463,9 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             if (water > 75) {
                 water = 75;
             }
+        }
+        if (e.getKeyCode() == KeyEvent.VK_A && started == true) { //What happens when A is pressed
+            air = 20;
         }
         if (e.getKeyCode() == KeyEvent.VK_ENTER && started == false) { //What happens when enter is pressed
             if (optionPicker == false) {
@@ -455,7 +478,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             options = false;
         }
         if (e.getKeyCode() == KeyEvent.VK_RIGHT && started == false && options == true) { //What happens when the right arrow is pressed
-            if (whichOption == 4) {
+            if (whichOption == 5) {
                 colorPicked++;
                 selectionCircle += 150;
                 if (colorPicked > 6) {
@@ -463,6 +486,12 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                 }
                 if (selectionCircle > 1050) {
                     selectionCircle = 1050;
+                }
+            } else if (whichOption == 4) {
+                if (needAir == true) {
+                    needAir = false;
+                } else if (needAir == false) {
+                    needAir = true;
                 }
             } else if (whichOption == 3) {
                 if (needWater == true) {
@@ -483,7 +512,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_LEFT && started == false && options == true) { //What happens when the left arrow is pressed
-            if (whichOption == 4) {
+            if (whichOption == 5) {
                 colorPicked--;
                 selectionCircle -= 150;
                 if (colorPicked < 1) {
@@ -491,6 +520,12 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                 }
                 if (selectionCircle < 300) {
                     selectionCircle = 300;
+                }
+            } else if (whichOption == 4) {
+                if (needAir == true) {
+                    needAir = false;
+                } else if (needAir == false) {
+                    needAir = true;
                 }
             } else if (whichOption == 3) {
                 if (needWater == true){
@@ -523,8 +558,8 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
         if (e.getKeyCode() == KeyEvent.VK_DOWN && started == false) { //What happens when the down arrow is pressed
             if (options == true) {
                 whichOption++;
-                if (whichOption > 4) {
-                    whichOption = 4;
+                if (whichOption > 5) {
+                    whichOption = 5;
                 }
             } else if (options == false) {
                 optionPicker = true;
