@@ -245,12 +245,27 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                 }
             }
             //Drawing which place
-            if (degrees >= p2Degrees) {
-                g2D.drawString("1st", 850,550);
-            } else if (degrees < p2Degrees) {
-                g2D.drawString("2nd", 850,550);
+            if (flat == true && p2flat == true) {
+                if (top == true && p2top == true) {
+                    if (playerx <= player2X) {
+                        g2D.drawString("1st", 850,550);
+                    } else if (playerx > player2X) {
+                        g2D.drawString("2nd", 850,550);
+                    }
+                } else if (top == false && p2top == false) {
+                    if (playerx >= player2X) {
+                        g2D.drawString("1st", 850,550);
+                    } else if (playerx < player2X) {
+                        g2D.drawString("2nd", 850, 550);
+                    }
+                }
+            } else {
+                if (degrees >= p2Degrees) {
+                    g2D.drawString("1st", 850, 550);
+                } else if (degrees < p2Degrees) {
+                    g2D.drawString("2nd", 850, 550);
+                }
             }
-
 
         } else if (finished == true && started == true) { //End Screen
             g2D.setColor(Color.BLACK);
