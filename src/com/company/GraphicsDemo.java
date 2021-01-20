@@ -237,15 +237,19 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                 g2D.setColor(Color.BLACK);
                 g2D.setFont(new Font("Copperplate", Font.PLAIN, 60));
                 if (playersteps < 150) {
-                    g2D.drawString("lap 1/" + laps, 500,550);
+                    g2D.drawString("lap 1/" + laps, 350,550);
                 } else if (playersteps < 300) {
-                    g2D.drawString("lap 2/" + laps, 500, 550);
+                    g2D.drawString("lap 2/" + laps, 350, 550);
                 } else if (playersteps >= 300) {
-                    g2D.drawString("lap 3/" + laps, 500, 550);
+                    g2D.drawString("lap 3/" + laps, 350, 550);
                 }
             }
             //Drawing which place
-
+            if (degrees >= p2Degrees) {
+                g2D.drawString("1st", 850,550);
+            } else if (degrees < p2Degrees) {
+                g2D.drawString("2nd", 850,550);
+            }
 
 
         } else if (finished == true && started == true) { //End Screen
