@@ -274,6 +274,27 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                 g2D.drawString("Second", 975,350);
             }
 
+            //Compared to world Record
+            g2D.setFont(new Font("Baskerville", Font.PLAIN,50));
+            if (laps == 1) {
+                g2D.drawString("The world record for 200m is 19.19 seconds", 300,500);
+                g2D.drawString("Set by Usain Bolt in 1986",300,600);
+                if (minutes < 1 && seconds < 19.19) {
+                    g2D.drawString("You beat that record!", 300, 700);
+                }
+            } else if (laps == 2) {
+                g2D.drawString("The world record for 400m is 43.03 seconds", 300, 500);
+                g2D.drawString("Set by Wayde Van Niekerk in 1992", 300, 600);
+                if (minutes < 1 && seconds < 43.03) {
+                    g2D.drawString("You beat that record!", 300, 700);
+                }
+            } else if (laps == 3) {
+                g2D.drawString("The world record for 600m is 1 minute and 12.81 seconds", 100, 500);
+                g2D.drawString("Set by Johnny Gray in 1986", 300, 600);
+                if (minutes == 0 || (minutes == 1 && seconds < 12.81)) {
+                    g2D.drawString("You beat that record!", 300, 700);
+                }
+            }
         }
     }
 
@@ -292,13 +313,10 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
 
             //Movement
             if (space == true && water > 0 && air > 0) {
-            /* System.out.println("The degrees is: " + degrees + " The player x is: " + playerx + " The player Y is: " + playery
-            + " The quadrant is: " + "top = " + top + " flat = " + flat + " left = " + left); */
                 if (flat == false && top == false && left == true) {
                     degrees += (Math.PI / 48);
                     velocityX = -20 * Math.sin(degrees);
                     velocityY = -20 * Math.cos(degrees);
-                    //+ " The velocity x is: " + velocityX + " The velocity y is: " + velocityY); // Debugging tool
                 } else if (flat == true && top == false) {
                     velocityX = 20;
                     velocityY = 0;
