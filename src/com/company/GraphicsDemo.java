@@ -6,20 +6,26 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.*;
+import java.util.Scanner;
+
 
 public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboard Input */, ActionListener {
+
+
 
     Timer timer = new Timer(10,this); //Creating a Timer
     //Variables
     double seconds = 0; //Variable for Time
     int minutes = 0; //Variable for Minutes
-    boolean started = false, go = false, finished = false, options = false; //See what part of the game are you a part of
+    boolean started = false, go = false, finished = false, options = false, seeRecords = true; //See what part of the game are you a part of
     boolean optionPicker = false; //Pick if you want to go to options or not
     int whichOption = 1; //Which option you pick in the options screen
     int selectionCircle = 300; //Where the selected color circle is
     int difficulty = 3; //What difficulty is it
     int laps = 1; //How many Laps
     boolean needWater = true, needAir = false; //If you want to need to breathe air and hydrate during the race
+    String[] recordContent = {"","",""};//Array to hold the records
     //Player Attributes
     int playerx = 110, playery = 350; //Variables for the player's position
     boolean space = false; //Variable to see if the space bar has been pressed
@@ -37,6 +43,11 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
     double p2velocityX = 0, p2velocityY = 0;
     int countTime = 0;
 
+    String localRecord = "";
+
+
+
+
 
     public GraphicsDemo() {
         addKeyListener(this);
@@ -44,6 +55,19 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
         setFocusTraversalKeysEnabled(false);
 
         timer.start();
+
+        try { //Having a records file
+            File records = new File("Records.txt"); //Creating File
+            Scanner readRecords = new Scanner(records); //Creating reader for file
+            //localRecord = readRecords.nextLine();
+            for (int c = 0; c < 3; c++) {
+                recordContent[c] = readRecords.nextLine(); //Putting File Records into variables
+            }
+            FileWriter writeRecords = new FileWriter("Records.txt"); //Creating file writer
+        } catch (IOException e) {
+            System.out.println("Error");
+            e.printStackTrace();
+        }
     }
 
     public void paintComponent(Graphics g) {
@@ -51,6 +75,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
         this.setBackground(new Color(222, 184, 135)); //Setting the Background and Colour
 
         Graphics g2D = (Graphics2D) g;
+
 
         if (started == false && options == false) { //Start Screen
 
@@ -116,7 +141,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                 g2D.drawRect(250,400,975,250);
             }
 
-        } else if (started == true && finished == false){ //Main Game Screen
+        } else if (started == true && finished == false && seeRecords == false){ //Main Game Screen
 
             if (go == false) {
                 //Ready Text
@@ -267,15 +292,15 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                 }
             }
 
-        } else if (finished == true && started == true) { //End Screen
+        } else if (finished == true && started == true && seeRecords == false) { //End Screen
             g2D.setColor(Color.BLACK);
-            g2D.setFont(new Font("Big Caslon", Font.BOLD,140));
-            g2D.drawString("Game Over", 400,125);
-            g2D.setFont(new Font("Avenir Next", Font.PLAIN,100));
+            g2D.setFont(new Font("Big Caslon", Font.BOLD, 140));
+            g2D.drawString("Game Over", 400, 125);
+            g2D.setFont(new Font("Avenir Next", Font.PLAIN, 100));
             //Final Time
-            g2D.drawString("Time", 100,250);
-            g2D.drawString("Place", 1000,250);
-            g2D.setFont(new Font("American Typewriter", Font.PLAIN,90));
+            g2D.drawString("Time", 100, 250);
+            g2D.drawString("Place", 1000, 250);
+            g2D.setFont(new Font("American Typewriter", Font.PLAIN, 90));
             if (minutes < 1) {
                 if (seconds < 9.5) {
                     g2D.drawString("00:0" + Math.round(seconds), 100, 350);
@@ -302,35 +327,58 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             if (degrees > p2Degrees) {
                 g2D.drawString("First", 1000, 350);
             } else if (degrees == p2Degrees) {
-                g2D.drawString("Tie", 1050,350);
+                g2D.drawString("Tie", 1050, 350);
             } else {
-                g2D.drawString("Second", 975,350);
+                g2D.drawString("Second", 975, 350);
             }
 
+            g2D.setFont(new Font("Impact", Font.PLAIN, 90));
+            g2D.drawString("Press Enter to see Records", 300, 500);
+
+        }
+        else if (seeRecords == true) {
+            g2D.setFont(new Font("Monaco", Font.BOLD, 120));
+            g2D.drawString("Records", 500, 100);
+
             //Compared to world Record
-            g2D.setFont(new Font("Baskerville", Font.PLAIN,50));
+            g2D.setFont(new Font("Rockwell", Font.BOLD, 60));
+            g2D.drawString("World Records", 50, 200);
+
+            g2D.setFont(new Font("Baskerville", Font.PLAIN, 50));
             if (laps == 1) {
-                g2D.drawString("The world record for 200m is 19.19 seconds", 300,500);
-                g2D.drawString("Set by Usain Bolt in 1986",300,600);
+                g2D.drawString("200m Record: 19.19s", 50,300);
+                g2D.drawString("Usain Bolt, 1986", 50, 375);
                 if (minutes < 1 && seconds < 19.19) {
-                    g2D.drawString("You beat that record!", 300, 700);
+                    g2D.drawString("You beat that record!", 50, 450);
                 }
             } else if (laps == 2) {
-                g2D.drawString("The world record for 400m is 43.03 seconds", 300, 500);
-                g2D.drawString("Set by Wayde Van Niekerk in 1992", 300, 600);
+                g2D.drawString("400m Record: 43.03s", 50, 300);
+                g2D.drawString("Wayde Van Niekerk, 1992", 50,375);
                 if (minutes < 1 && seconds < 43.03) {
-                    g2D.drawString("You beat that record!", 300, 700);
+                    g2D.drawString("You beat that record!", 50, 450);
                 }
             } else if (laps == 3) {
-                g2D.drawString("The world record for 600m is 1 minute and 12.81 seconds", 100, 500);
-                g2D.drawString("Set by Johnny Gray in 1986", 300, 600);
+                g2D.drawString("600m Record: 1:12.81s", 50,300);
+                g2D.drawString("Johnny Gray, 1986", 50, 375);
                 if (minutes == 0 || (minutes == 1 && seconds < 12.81)) {
-                    g2D.drawString("You beat that record!", 300, 700);
+                    g2D.drawString("You beat that record!", 50, 450);
                 }
+            }
+
+            //Compared to Local Record
+            g2D.setFont(new Font("Rockwell", Font.BOLD, 60));
+            g2D.drawString("Personal Records", 800, 200);
+
+            g2D.setFont(new Font("Baskerville", Font.PLAIN, 50));
+            if (laps == 1) {
+                g2D.drawString("200m Record: " + recordContent[0] + "s", 800, 300);
+            } else if (laps == 2) {
+                g2D.drawString("200m Record: " + recordContent[1] + "s", 800, 300);
+            } else if (laps == 3) {
+                g2D.drawString("200m Record: " + recordContent[2] + "s", 800, 300);
             }
         }
     }
-
 
 
     @Override
@@ -518,11 +566,16 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
         if (e.getKeyCode() == KeyEvent.VK_A && started == true) { //What happens when A is pressed
             air = 20;
         }
-        if (e.getKeyCode() == KeyEvent.VK_ENTER && started == false) { //What happens when enter is pressed
-            if (optionPicker == false) {
-                started = true;
-            } else if (optionPicker == true) {
-                options = true;
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) { //What happens when enter is pressed
+            if (started == false) {
+                if (optionPicker == false) {
+                    started = true;
+                } else if (optionPicker == true) {
+                    options = true;
+                }
+            }
+            if (finished == true) {
+                seeRecords = true;
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE && started == false && options == true) { //What happens when you press escape
