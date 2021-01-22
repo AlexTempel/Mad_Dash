@@ -8,6 +8,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.*;
 import java.util.Scanner;
+import static java.lang.Integer.parseInt;
+import java.nio.*;
 
 
 public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboard Input */, ActionListener {
@@ -18,14 +20,15 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
     //Variables
     double seconds = 0; //Variable for Time
     int minutes = 0; //Variable for Minutes
-    boolean started = false, go = false, finished = false, options = false, seeRecords = true; //See what part of the game are you a part of
+    boolean started = false, go = false, finished = false, options = false, seeRecords = false; //See what part of the game are you a part of
     boolean optionPicker = false; //Pick if you want to go to options or not
     int whichOption = 1; //Which option you pick in the options screen
     int selectionCircle = 300; //Where the selected color circle is
     int difficulty = 3; //What difficulty is it
     int laps = 1; //How many Laps
     boolean needWater = true, needAir = false; //If you want to need to breathe air and hydrate during the race
-    String[] recordContent = {"","",""};//Array to hold the records
+    String[] recordContent = {"","",""}; //Array to hold the records
+    double[] recordValue = {0,0,0}; //Array to hold the number value of the records
     //Player Attributes
     int playerx = 110, playery = 350; //Variables for the player's position
     boolean space = false; //Variable to see if the space bar has been pressed
@@ -43,8 +46,6 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
     double p2velocityX = 0, p2velocityY = 0;
     int countTime = 0;
 
-    String localRecord = "";
-
 
 
 
@@ -59,12 +60,13 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
         try { //Having a records file
             File records = new File("Records.txt"); //Creating File
             Scanner readRecords = new Scanner(records); //Creating reader for file
-            //localRecord = readRecords.nextLine();
             for (int c = 0; c < 3; c++) {
                 recordContent[c] = readRecords.nextLine(); //Putting File Records into variables
+                System.out.println(recordContent[c]);
+                recordValue[c] = Double.parseDouble(recordContent[c]); //Putting the number value into a loop
             }
-            FileWriter writeRecords = new FileWriter("Records.txt"); //Creating file writer
-        } catch (IOException e) {
+            readRecords.close();
+        } catch (Exception e) {
             System.out.println("Error");
             e.printStackTrace();
         }
@@ -335,8 +337,30 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             g2D.setFont(new Font("Impact", Font.PLAIN, 90));
             g2D.drawString("Press Enter to see Records", 300, 500);
 
-        }
-        else if (seeRecords == true) {
+        } else if (seeRecords == true) {
+            g2D.setFont(new Font("American Typewriter", Font.PLAIN, 90));
+            g2D.drawString("Your Time", 450,575);
+            if (minutes < 1) {
+                if (seconds < 9.5) {
+                    g2D.drawString("00:0" + Math.round(seconds), 500, 650);
+                } else {
+                    g2D.drawString("00:" + Math.round(seconds), 500, 650);
+                }
+            } else {
+                if (minutes < 10) {
+                    if (seconds < 9.5) {
+                        g2D.drawString("0" + minutes + ":0" + Math.round(seconds), 500, 650);
+                    } else {
+                        g2D.drawString("0" + minutes + ":" + Math.round(seconds), 500, 650);
+                    }
+                } else {
+                    if (seconds < 9.5) {
+                        g2D.drawString(minutes + ":0" + Math.round(seconds), 500, 650);
+                    } else {
+                        g2D.drawString(minutes + ":" + Math.round(seconds), 500, 650);
+                    }
+                }
+            }
             g2D.setFont(new Font("Monaco", Font.BOLD, 120));
             g2D.drawString("Records", 500, 100);
 
@@ -372,11 +396,21 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             g2D.setFont(new Font("Baskerville", Font.PLAIN, 50));
             if (laps == 1) {
                 g2D.drawString("200m Record: " + recordContent[0] + "s", 800, 300);
+                if (seconds + (minutes * 60) < recordValue[0]) {
+                    g2D.drawString("You beat that record!", 800,450);
+                }
             } else if (laps == 2) {
-                g2D.drawString("200m Record: " + recordContent[1] + "s", 800, 300);
+                g2D.drawString("400m Record: " + recordContent[1] + "s", 800, 300);
+                if (seconds + (minutes * 60) < recordValue[1]) {
+                    g2D.drawString("You beat that record!", 800,450);
+                }
             } else if (laps == 3) {
-                g2D.drawString("200m Record: " + recordContent[2] + "s", 800, 300);
+                g2D.drawString("600m Record: " + recordContent[2] + "s", 800, 300);
+                if (seconds + (minutes * 60) < recordValue[2]) {
+                    g2D.drawString("You beat that record!", 800,450);
+                }
             }
+
         }
     }
 
@@ -524,6 +558,44 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                 player2Y += p2velocityY;
             }
         }
+        try {
+            if (seeRecords == true) {
+                FileWriter writeRecords = new FileWriter("Records.txt"); //Creating file writer
+                System.out.println("Currently " + laps + " laps");
+                if (laps == 1) {
+                    System.out.println("1 lap processed");
+                    if (seconds + (minutes * 60) < recordValue[0]) {
+                        writeRecords.write((Math.round(seconds + (minutes * 60) * 100) / 100) + "\n" + recordValue[1] + "\n" + recordValue[2]);
+                        writeRecords.close();
+                    } else {
+                        writeRecords.write(recordValue[0] + "\n" + recordValue[1] + "\n" + recordContent[2]);
+                        writeRecords.close();
+                    }
+                } else if (laps == 2) {
+                    System.out.println("2 laps processed");
+                    if (seconds + (minutes * 60) < recordValue[1]) {
+                        writeRecords.write(recordValue[0] + "\n" + (Math.round(seconds + (minutes * 60) * 100) / 100) + "\n" + recordValue[2]);
+                        writeRecords.close();
+                    } else {
+                        writeRecords.write(recordValue[0] + "\n" + recordValue[1] + "\n" + recordContent[2]);
+                        writeRecords.close();
+                    }
+                } else if (laps == 3) {
+                    System.out.println("3 laps processed");
+                    if (seconds + (minutes * 60) < recordValue[2]) {
+                        writeRecords.write(recordValue[0] + "\n" + recordValue[1] + "\n" + (Math.round(seconds + (minutes * 60) * 100) / 100));
+                        writeRecords.close();
+                    } else {
+                        writeRecords.write(recordValue[0] + "\n" + recordValue[1] + "\n" + recordContent[2]);
+                        writeRecords.close();
+                    }
+                }
+            }
+        } catch (IOException ioException) {
+            System.out.println("Error");
+            ioException.printStackTrace();
+        }
+
         repaint();
     }
 
