@@ -3,6 +3,8 @@ Alex.T Olympic Sprint game
 
 Use arrow keys to navigate, enter to go forwards, esc to go back
 Follow instructions on screen
+
+Press Q to quit at any time
  */
 
 
@@ -110,7 +112,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             g2D.setFont(new Font("Menlo", Font.PLAIN, 50));
             g2D.drawString("Difficulty: " + difficulty, 500, 175);
             //Laps
-            g2D.drawString("Laps: " + laps, 600, 75);
+            g2D.drawString("Laps: " + laps, 500, 75);
             //Water
             g2D.drawString("Water on: " + needWater, 500, 275);
             //Air
@@ -137,7 +139,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             g2D.drawOval(selectionCircle, 525, 100, 100);
 
             if (whichOption == 1) {
-                g2D.drawRect(575, 25, 250, 75);
+                g2D.drawRect(475, 25, 250, 75);
             } else if (whichOption == 2) {
                 g2D.drawRect(475, 125, 450, 75);
             } else if (whichOption == 3) {
@@ -268,16 +270,16 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             if (laps != 1) {
                 g2D.setColor(Color.BLACK);
                 g2D.setFont(new Font("Copperplate", Font.PLAIN, 60));
-                if (playersteps < 150) {
+                if (playersteps <= 150) {
                     g2D.drawString("lap 1/" + laps, 350,550);
-                } else if (playersteps < 300) {
+                } else if (playersteps <= 300) {
                     g2D.drawString("lap 2/" + laps, 350, 550);
-                } else if (playersteps >= 300) {
+                } else if (playersteps > 300) {
                     g2D.drawString("lap 3/" + laps, 350, 550);
                 }
             }
             //Drawing which place
-            if (flat == true && p2flat == true) {
+            if (flat == true && p2flat == true) { //Fixed bug where the inner runner will still be "ahead", while on the flat part of the course
                 if (top == true && p2top == true) {
                     if (playerx <= player2X) {
                         g2D.drawString("1st", 850,550);
@@ -342,6 +344,9 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             g2D.setFont(new Font("Impact", Font.PLAIN, 90));
             g2D.drawString("Press Enter to see Records", 300, 500);
 
+            g2D.setFont(new Font("Monaco", Font.BOLD, 25));
+            g2D.drawString("Press 'Q' to quit", 500,700);
+
         } else if (seeRecords == true) {
             g2D.setFont(new Font("American Typewriter", Font.PLAIN, 90));
             g2D.drawString("Your Time", 450,575);
@@ -368,6 +373,10 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             }
             g2D.setFont(new Font("Monaco", Font.BOLD, 120));
             g2D.drawString("Records", 500, 100);
+
+            //Quit Prompt
+            g2D.setFont(new Font("Monaco", Font.BOLD, 25));
+            g2D.drawString("Press 'Q' to quit", 500,700);
 
             //Compared to world Record
             g2D.setFont(new Font("Rockwell", Font.BOLD, 60));
@@ -569,7 +578,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                 //You need to write back ot the file in a different order depending upon which lap record you beat
                 if (laps == 1) {
                     if (seconds + (minutes * 60) < recordValue[0]) {
-                        writeRecords.write((Math.round(seconds + (minutes * 60) * 100) / 100) + "\n" + recordValue[1] + "\n" + recordValue[2]);
+                        writeRecords.write((Math.round((seconds + (minutes * 60) * 100)) / 100) + "\n" + recordValue[1] + "\n" + recordValue[2]);
                         writeRecords.close();
                     } else {
                         writeRecords.write(recordValue[0] + "\n" + recordValue[1] + "\n" + recordContent[2]);
@@ -577,7 +586,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                     }
                 } else if (laps == 2) {
                     if (seconds + (minutes * 60) < recordValue[1]) {
-                        writeRecords.write(recordValue[0] + "\n" + (Math.round(seconds + (minutes * 60) * 100) / 100) + "\n" + recordValue[2]);
+                        writeRecords.write(recordValue[0] + "\n" + ((Math.round((seconds + (minutes * 60))) * 100) / 100) + "\n" + recordValue[2]);
                         writeRecords.close();
                     } else {
                         writeRecords.write(recordValue[0] + "\n" + recordValue[1] + "\n" + recordContent[2]);
@@ -585,7 +594,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                     }
                 } else if (laps == 3) {
                     if (seconds + (minutes * 60) < recordValue[2]) {
-                        writeRecords.write(recordValue[0] + "\n" + recordValue[1] + "\n" + (Math.round(seconds + (minutes * 60) * 100) / 100));
+                        writeRecords.write(recordValue[0] + "\n" + recordValue[1] + "\n" + ((Math.round((seconds + (minutes * 60))) * 100) / 100));
                         writeRecords.close();
                     } else {
                         writeRecords.write(recordValue[0] + "\n" + recordValue[1] + "\n" + recordContent[2]);
@@ -742,6 +751,9 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             } else if (options == false) {
                 optionPicker = true;
             }
+        }
+        if (e.getKeyCode() == KeyEvent.VK_Q) {
+            System.exit(0);
         }
     }
 }
