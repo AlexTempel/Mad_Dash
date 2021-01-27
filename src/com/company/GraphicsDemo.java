@@ -1,3 +1,11 @@
+/*
+Alex.T Olympic Sprint game
+
+Use arrow keys to navigate, enter to go forwards, esc to go back
+Follow instructions on screen
+ */
+
+
 package com.company;
 //Imports
 import javax.swing.*;
@@ -8,8 +16,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.*;
 import java.util.Scanner;
-import static java.lang.Integer.parseInt;
-import java.nio.*;
+
 
 
 public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboard Input */, ActionListener {
@@ -62,7 +69,7 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             Scanner readRecords = new Scanner(records); //Creating reader for file
             for (int c = 0; c < 3; c++) {
                 recordContent[c] = readRecords.nextLine(); //Putting File Records into variables
-                System.out.println(recordContent[c]);
+                //System.out.println(recordContent[c]);
                 recordValue[c] = Double.parseDouble(recordContent[c]); //Putting the number value into a loop
             }
             readRecords.close();
@@ -85,16 +92,14 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
             g2D.setColor(Color.BLACK);
             g2D.setFont(new Font("Lucida Grande", Font.PLAIN, 150));
             g2D.drawString("Mad Dash", 375, 200);
+            g2D.setFont(new Font("Anadale Mono", Font.PLAIN, 100));
+            g2D.drawString("Start", 575, 400);
+            g2D.drawString("Options", 500, 550);
+            ((Graphics2D) g2D).setStroke(new BasicStroke(10));
             if (optionPicker == false) {
-                g2D.setFont(new Font("Anadale Mono", Font.BOLD, 120));
-                g2D.drawString("Start", 575, 400);
-                g2D.setFont(new Font("Anadale Mono", Font.PLAIN, 100));
-                g2D.drawString("Options", 500, 550);
+                g2D.drawRect(525,300,350,125);
             } else if (optionPicker == true) {
-                g2D.setFont(new Font("Anadale Mono", Font.PLAIN, 100));
-                g2D.drawString("Start", 575, 400);
-                g2D.setFont(new Font("Anadale Mono", Font.BOLD, 120));
-                g2D.drawString("Options", 500, 550);
+                g2D.drawRect(475,450,450,125);
             }
 
         } else if (started == false && options == true) { //Options Screen
@@ -561,9 +566,8 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
         try {
             if (seeRecords == true) {
                 FileWriter writeRecords = new FileWriter("Records.txt"); //Creating file writer
-                System.out.println("Currently " + laps + " laps");
+                //You need to write back ot the file in a different order depending upon which lap record you beat
                 if (laps == 1) {
-                    System.out.println("1 lap processed");
                     if (seconds + (minutes * 60) < recordValue[0]) {
                         writeRecords.write((Math.round(seconds + (minutes * 60) * 100) / 100) + "\n" + recordValue[1] + "\n" + recordValue[2]);
                         writeRecords.close();
@@ -572,7 +576,6 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                         writeRecords.close();
                     }
                 } else if (laps == 2) {
-                    System.out.println("2 laps processed");
                     if (seconds + (minutes * 60) < recordValue[1]) {
                         writeRecords.write(recordValue[0] + "\n" + (Math.round(seconds + (minutes * 60) * 100) / 100) + "\n" + recordValue[2]);
                         writeRecords.close();
@@ -581,7 +584,6 @@ public class GraphicsDemo extends JPanel implements KeyListener /* To get Keyboa
                         writeRecords.close();
                     }
                 } else if (laps == 3) {
-                    System.out.println("3 laps processed");
                     if (seconds + (minutes * 60) < recordValue[2]) {
                         writeRecords.write(recordValue[0] + "\n" + recordValue[1] + "\n" + (Math.round(seconds + (minutes * 60) * 100) / 100));
                         writeRecords.close();
